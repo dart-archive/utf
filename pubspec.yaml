@@ -4,6 +4,6 @@ author: Dart Team <misc@dartlang.org>
 description: >
  A Unicode library. Intended for advanced use where the built-in facilities
  are too limiting.
-homepage: https://pub.dartlang.org/packages/utf
+homepage: https://www.github.com/dart-lang/utf
 environment:
   sdk: '>=1.0.0 <2.0.0'
