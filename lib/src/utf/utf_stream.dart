@@ -205,7 +205,6 @@ abstract class _StringEncoder
 class Utf8EncoderTransformer extends _StringEncoder {
   List<int> _processString(String string) {
     var bytes = <int>[];
-    int pos = 0;
     List<int> codepoints = utf16CodeUnitsToCodepoints(string.codeUnits);
     int length = codepoints.length;
     for (int i = 0; i < length; i++) {
@@ -231,7 +230,6 @@ class Utf8EncoderTransformer extends _StringEncoder {
         // 10xxxxxx (xxxxxx is next 6 bits from the top).
         bytes.add(((charCode >> (6 * (i - 1))) & 0x3F) | 0x80);
       }
-      pos += additionalBytes + 1;
     }
     return bytes;
   }
