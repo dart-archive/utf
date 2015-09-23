@@ -19,11 +19,12 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
   final int replacementCodepoint;
   int _current = null;
 
-  Utf16CodeUnitDecoder(List<int> utf16CodeUnits, [int offset = 0, int length,
-      int this.replacementCodepoint =
-      UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) :
-      utf16CodeUnitIterator =
-          (new ListRange(utf16CodeUnits, offset, length)).iterator;
+  Utf16CodeUnitDecoder(List<int> utf16CodeUnits,
+      [int offset = 0,
+      int length,
+      int this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
+      : utf16CodeUnitIterator =
+            (new ListRange(utf16CodeUnits, offset, length)).iterator;
 
   Utf16CodeUnitDecoder.fromListRangeIterator(
       ListRangeIterator this.utf16CodeUnitIterator,
@@ -61,7 +62,7 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
         _current = value;
       } else {
         if (nextValue >= UNICODE_UTF16_SURROGATE_UNIT_0_BASE &&
-           nextValue < UNICODE_UTF16_SURROGATE_UNIT_1_BASE) {
+            nextValue < UNICODE_UTF16_SURROGATE_UNIT_1_BASE) {
           utf16CodeUnitIterator.backup();
         }
         if (replacementCodepoint != null) {
@@ -80,4 +81,3 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
     return true;
   }
 }
-

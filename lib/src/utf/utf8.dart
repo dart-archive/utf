@@ -28,7 +28,8 @@ const int _UTF8_SUBSEQUENT_BYTE_BASE = 0x80;
  * as much of the input as needed. Set the replacementCharacter to null to
  * throw an ArgumentError rather than replace the bad value.
  */
-IterableUtf8Decoder decodeUtf8AsIterable(List<int> bytes, [int offset = 0,
+IterableUtf8Decoder decodeUtf8AsIterable(List<int> bytes,
+    [int offset = 0,
     int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   return new IterableUtf8Decoder(bytes, offset, length, replacementCodepoint);
@@ -41,23 +42,24 @@ IterableUtf8Decoder decodeUtf8AsIterable(List<int> bytes, [int offset = 0,
  * Set the replacementCharacter to null to throw an ArgumentError
  * rather than replace the bad value.
  */
-String decodeUtf8(List<int> bytes, [int offset = 0, int length,
+String decodeUtf8(List<int> bytes,
+    [int offset = 0,
+    int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   return new String.fromCharCodes(
       (new Utf8Decoder(bytes, offset, length, replacementCodepoint))
-      .decodeRest());
+          .decodeRest());
 }
 
 /**
  * Produce a sequence of UTF-8 encoded bytes from the provided string.
  */
-List<int> encodeUtf8(String str) =>
-  codepointsToUtf8(stringToCodepoints(str));
+List<int> encodeUtf8(String str) => codepointsToUtf8(stringToCodepoints(str));
 
 int _addToEncoding(int offset, int bytes, int value, List<int> buffer) {
   while (bytes > 0) {
-    buffer[offset + bytes] = _UTF8_SUBSEQUENT_BYTE_BASE |
-        (value & _UTF8_LO_SIX_BIT_MASK);
+    buffer[offset + bytes] =
+        _UTF8_SUBSEQUENT_BYTE_BASE | (value & _UTF8_LO_SIX_BIT_MASK);
     value = value >> 6;
     bytes--;
   }
@@ -67,8 +69,7 @@ int _addToEncoding(int offset, int bytes, int value, List<int> buffer) {
 /**
  * Encode code points as UTF-8 code units.
  */
-List<int> codepointsToUtf8(
-    List<int> codepoints, [int offset = 0, int length]) {
+List<int> codepointsToUtf8(List<int> codepoints, [int offset = 0, int length]) {
   ListRange source = new ListRange(codepoints, offset, length);
 
   int encodedLength = 0;
@@ -96,19 +97,19 @@ List<int> codepointsToUtf8(
       encoded[insertAt] = value;
       insertAt++;
     } else if (value <= _UTF8_TWO_BYTE_MAX) {
-      encoded[insertAt] = _UTF8_FIRST_BYTE_OF_TWO_BASE | (
-          _UTF8_FIRST_BYTE_OF_TWO_MASK &
-          _addToEncoding(insertAt, 1, value, encoded));
+      encoded[insertAt] = _UTF8_FIRST_BYTE_OF_TWO_BASE |
+          (_UTF8_FIRST_BYTE_OF_TWO_MASK &
+              _addToEncoding(insertAt, 1, value, encoded));
       insertAt += 2;
     } else if (value <= _UTF8_THREE_BYTE_MAX) {
-      encoded[insertAt] = _UTF8_FIRST_BYTE_OF_THREE_BASE | (
-          _UTF8_FIRST_BYTE_OF_THREE_MASK &
-          _addToEncoding(insertAt, 2, value, encoded));
+      encoded[insertAt] = _UTF8_FIRST_BYTE_OF_THREE_BASE |
+          (_UTF8_FIRST_BYTE_OF_THREE_MASK &
+              _addToEncoding(insertAt, 2, value, encoded));
       insertAt += 3;
     } else if (value <= UNICODE_VALID_RANGE_MAX) {
-      encoded[insertAt] = _UTF8_FIRST_BYTE_OF_FOUR_BASE | (
-          _UTF8_FIRST_BYTE_OF_FOUR_MASK &
-          _addToEncoding(insertAt, 3, value, encoded));
+      encoded[insertAt] = _UTF8_FIRST_BYTE_OF_FOUR_BASE |
+          (_UTF8_FIRST_BYTE_OF_FOUR_MASK &
+              _addToEncoding(insertAt, 3, value, encoded));
       insertAt += 4;
     }
   }
@@ -117,11 +118,12 @@ List<int> codepointsToUtf8(
 
 // Because UTF-8 specifies byte order, we do not have to follow the pattern
 // used by UTF-16 & UTF-32 regarding byte order.
-List<int> utf8ToCodepoints(
-    List<int> utf8EncodedBytes, [int offset = 0, int length,
+List<int> utf8ToCodepoints(List<int> utf8EncodedBytes,
+    [int offset = 0,
+    int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  return new Utf8Decoder(utf8EncodedBytes, offset, length,
-      replacementCodepoint).decodeRest();
+  return new Utf8Decoder(utf8EncodedBytes, offset, length, replacementCodepoint)
+      .decodeRest();
 }
 
 /**
@@ -137,7 +139,9 @@ class IterableUtf8Decoder extends IterableBase<int> {
   final int length;
   final int replacementCodepoint;
 
-  IterableUtf8Decoder(this.bytes, [this.offset = 0, this.length = null,
+  IterableUtf8Decoder(this.bytes,
+      [this.offset = 0,
+      this.length = null,
       this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
 
   Utf8Decoder get iterator =>
@@ -158,17 +162,16 @@ class Utf8Decoder implements Iterator<int> {
   final int replacementCodepoint;
   int _current = null;
 
-  Utf8Decoder(List<int> utf8EncodedBytes, [int offset = 0, int length,
-      this.replacementCodepoint =
-      UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) :
-      utf8EncodedBytesIterator =
-          (new ListRange(utf8EncodedBytes, offset, length)).iterator;
+  Utf8Decoder(List<int> utf8EncodedBytes,
+      [int offset = 0,
+      int length,
+      this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
+      : utf8EncodedBytesIterator =
+            (new ListRange(utf8EncodedBytes, offset, length)).iterator;
 
-
-  Utf8Decoder._fromListRangeIterator(ListRange source, [
-      this.replacementCodepoint =
-      UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) :
-      utf8EncodedBytesIterator = source.iterator;
+  Utf8Decoder._fromListRangeIterator(ListRange source,
+      [this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
+      : utf8EncodedBytesIterator = source.iterator;
 
   /** Decode the remaininder of the characters in this decoder
     * into a [List<int>].
@@ -254,11 +257,10 @@ class Utf8Decoder implements Iterator<int> {
       }
       j++;
     }
-    bool validSequence = (j == additionalBytes && (
-        value < UNICODE_UTF16_RESERVED_LO ||
-        value > UNICODE_UTF16_RESERVED_HI));
-    bool nonOverlong =
-        (additionalBytes == 1 && value > _UTF8_ONE_BYTE_MAX) ||
+    bool validSequence = (j == additionalBytes &&
+        (value < UNICODE_UTF16_RESERVED_LO ||
+            value > UNICODE_UTF16_RESERVED_HI));
+    bool nonOverlong = (additionalBytes == 1 && value > _UTF8_ONE_BYTE_MAX) ||
         (additionalBytes == 2 && value > _UTF8_TWO_BYTE_MAX) ||
         (additionalBytes == 3 && value > _UTF8_THREE_BYTE_MAX);
     bool inRange = value <= UNICODE_VALID_RANGE_MAX;

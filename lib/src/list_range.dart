@@ -18,10 +18,10 @@ class ListRange extends IterableBase {
   final int _offset;
   final int _length;
 
-  ListRange(source, [offset = 0, length]) :
-      this._source = source,
-      this._offset = offset,
-      this._length = (length == null ? source.length - offset : length) {
+  ListRange(source, [offset = 0, length])
+      : this._source = source,
+        this._offset = offset,
+        this._length = (length == null ? source.length - offset : length) {
     if (_offset < 0 || _offset > _source.length) {
       throw new RangeError.value(_offset);
     }
