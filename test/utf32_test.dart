@@ -4,6 +4,7 @@
 
 library utf.utf32_test;
 
+import 'package:unittest/unittest.dart';
 import 'package:utf/utf.dart';
 
 import 'expect.dart';
@@ -109,9 +110,9 @@ const List<int> testKoreanCharSubsetUtf32le = const <int>[
 ];
 
 void main() {
-  testUtf32BytesToString();
-  testEncodeToUtf32();
-  testIterableMethods();
+  test('utf32 bytes to string', testUtf32BytesToString);
+  test('encode to utf32', testEncodeToUtf32);
+  test('iterable methods', testIterableMethods);
 }
 
 void testEncodeToUtf32() {

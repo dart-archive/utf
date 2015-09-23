@@ -4,6 +4,7 @@
 
 library utf.utf82_test;
 
+import 'package:unittest/unittest.dart';
 import 'package:utf/utf.dart';
 
 import 'expect.dart';
@@ -121,10 +122,10 @@ const List<int> testKatakanaUtf8 = const <int>[
 ];
 
 void main() {
-  testUtf8bytesToCodepoints();
-  testUtf8BytesToString();
-  testEncodeToUtf8();
-  testIterableMethods();
+  test('utf8 bytes to codepoints', testUtf8bytesToCodepoints);
+  test('utf8 bytes to string', testUtf8BytesToString);
+  test('encode to utf8', testEncodeToUtf8);
+  test('iterable methods', testIterableMethods);
 }
 
 void testEncodeToUtf8() {

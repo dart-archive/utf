@@ -4,6 +4,7 @@
 
 library utf.utf16_test;
 
+import 'package:unittest/unittest.dart';
 import 'package:utf/utf.dart';
 
 import 'expect.dart';
@@ -66,9 +67,9 @@ const List<int> testKoreanCharSubsetUtf16le = const <int>[
 ];
 
 void main() {
-  testEncodeToUtf16();
-  testUtf16BytesToString();
-  testIterableMethods();
+  test('encode to utf16', testEncodeToUtf16);
+  test('utf16 bytes to string', testUtf16BytesToString);
+  test('iterable methods', testIterableMethods);
 }
 
 void testEncodeToUtf16() {
