@@ -4,8 +4,9 @@
 
 library utf.utf8_test;
 
-import "package:expect/expect.dart";
 import "package:utf/utf.dart";
+
+import 'expect.dart';
 
 String decode(List<int> bytes) => decodeUtf8(bytes);
 

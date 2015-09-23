@@ -4,8 +4,9 @@
 
 library utf.utf_test;
 
-import "package:expect/expect.dart";
 import "package:utf/utf.dart";
+
+import "expect.dart";
 
 main() {
   String str = new String.fromCharCodes([0x1d537]);

@@ -4,7 +4,7 @@
 
 library utf.unicode_core_test;
 
-import 'package:expect/expect.dart';
+import 'expect.dart';
 
 import 'package:utf/utf.dart';
 import 'package:utf/src/util.dart';
