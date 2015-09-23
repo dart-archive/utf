@@ -4,7 +4,7 @@
 
 library utf.utf32_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:utf/utf.dart';
 
 import 'expect.dart';
