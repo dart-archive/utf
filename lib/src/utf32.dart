@@ -2,7 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of utf;
+library utf.utf32;
+
+import "dart:collection";
+
+import 'constants.dart';
+import 'list_range.dart';
+import 'shared.dart';
 
 /**
  * Decodes the UTF-32 bytes as an iterable. Thus, the consumer can only convert
