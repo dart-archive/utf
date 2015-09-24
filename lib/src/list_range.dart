@@ -13,15 +13,15 @@ import 'dart:collection';
  */
 // TODO(floitsch): Consider removing the extend and switch to implements since
 // that's cheaper to allocate.
-class ListRange extends IterableBase {
-  final List _source;
+class ListRange extends IterableBase<int> {
+  final List<int> _source;
   final int _offset;
   final int _length;
 
-  ListRange(source, [offset = 0, length]) :
-      this._source = source,
-      this._offset = offset,
-      this._length = (length == null ? source.length - offset : length) {
+  ListRange(List<int> source, [offset = 0, length])
+      : this._source = source,
+        this._offset = offset,
+        this._length = (length == null ? source.length - offset : length) {
     if (_offset < 0 || _offset > _source.length) {
       throw new RangeError.value(_offset);
     }

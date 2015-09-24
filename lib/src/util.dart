@@ -11,13 +11,14 @@ import 'utf_16_code_unit_decoder.dart';
 /**
  * Decodes the utf16 codeunits to codepoints.
  */
-List<int> utf16CodeUnitsToCodepoints(
-    List<int> utf16CodeUnits, [int offset = 0, int length,
+List<int> utf16CodeUnitsToCodepoints(List<int> utf16CodeUnits,
+    [int offset = 0,
+    int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   ListRangeIterator source =
       (new ListRange(utf16CodeUnits, offset, length)).iterator;
-  Utf16CodeUnitDecoder decoder = new Utf16CodeUnitDecoder
-      .fromListRangeIterator(source, replacementCodepoint);
+  Utf16CodeUnitDecoder decoder = new Utf16CodeUnitDecoder.fromListRangeIterator(
+      source, replacementCodepoint);
   List<int> codepoints = new List<int>(source.remaining);
   int i = 0;
   while (decoder.moveNext()) {
@@ -35,12 +36,10 @@ List<int> utf16CodeUnitsToCodepoints(
 /**
  * Encode code points as UTF16 code units.
  */
-List<int> codepointsToUtf16CodeUnits(
-    List<int> codepoints,
+List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     [int offset = 0,
-     int length,
-     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-
+    int length,
+    int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   ListRange listRange = new ListRange(codepoints, offset, length);
   int encodedLength = 0;
   for (int value in listRange) {
@@ -66,8 +65,8 @@ List<int> codepointsToUtf16CodeUnits(
       int base = value - UNICODE_UTF16_OFFSET;
       codeUnitsBuffer[j++] = UNICODE_UTF16_SURROGATE_UNIT_0_BASE +
           ((base & UNICODE_UTF16_HI_MASK) >> 10);
-      codeUnitsBuffer[j++] = UNICODE_UTF16_SURROGATE_UNIT_1_BASE +
-          (base & UNICODE_UTF16_LO_MASK);
+      codeUnitsBuffer[j++] =
+          UNICODE_UTF16_SURROGATE_UNIT_1_BASE + (base & UNICODE_UTF16_LO_MASK);
     } else if (replacementCodepoint != null) {
       codeUnitsBuffer[j++] = replacementCodepoint;
     } else {

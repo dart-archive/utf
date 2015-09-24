@@ -2,7 +2,13 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of utf;
+library utf.utf32;
+
+import "dart:collection";
+
+import 'constants.dart';
+import 'list_range.dart';
+import 'shared.dart';
 
 /**
  * Decodes the UTF-32 bytes as an iterable. Thus, the consumer can only convert
@@ -11,8 +17,9 @@ part of utf;
  * Set the replacementCharacter to null to throw an ArgumentError
  * rather than replace the bad value.
  */
-IterableUtf32Decoder decodeUtf32AsIterable(List<int> bytes, [
-    int offset = 0, int length,
+IterableUtf32Decoder decodeUtf32AsIterable(List<int> bytes,
+    [int offset = 0,
+    int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   return new IterableUtf32Decoder._(
       () => new Utf32BytesDecoder(bytes, offset, length, replacementCodepoint));
@@ -25,12 +32,13 @@ IterableUtf32Decoder decodeUtf32AsIterable(List<int> bytes, [
  * Set the replacementCharacter to null to throw an ArgumentError
  * rather than replace the bad value.
  */
-IterableUtf32Decoder decodeUtf32beAsIterable(List<int> bytes, [
-    int offset = 0, int length, bool stripBom = true,
+IterableUtf32Decoder decodeUtf32beAsIterable(List<int> bytes,
+    [int offset = 0,
+    int length,
+    bool stripBom = true,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  return new IterableUtf32Decoder._(
-      () => new Utf32beBytesDecoder(bytes, offset, length, stripBom,
-          replacementCodepoint));
+  return new IterableUtf32Decoder._(() => new Utf32beBytesDecoder(
+      bytes, offset, length, stripBom, replacementCodepoint));
 }
 
 /**
@@ -40,12 +48,13 @@ IterableUtf32Decoder decodeUtf32beAsIterable(List<int> bytes, [
  * Set the replacementCharacter to null to throw an ArgumentError
  * rather than replace the bad value.
  */
-IterableUtf32Decoder decodeUtf32leAsIterable(List<int> bytes, [
-    int offset = 0, int length, bool stripBom = true,
+IterableUtf32Decoder decodeUtf32leAsIterable(List<int> bytes,
+    [int offset = 0,
+    int length,
+    bool stripBom = true,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  return new IterableUtf32Decoder._(
-      () => new Utf32leBytesDecoder(bytes, offset, length, stripBom,
-          replacementCodepoint));
+  return new IterableUtf32Decoder._(() => new Utf32leBytesDecoder(
+      bytes, offset, length, stripBom, replacementCodepoint));
 }
 
 /**
@@ -55,11 +64,15 @@ IterableUtf32Decoder decodeUtf32leAsIterable(List<int> bytes, [
  * replacement character. Set the replacementCharacter to null to throw an
  * ArgumentError rather than replace the bad value.
  */
-String decodeUtf32(List<int> bytes, [int offset = 0, int length,
+String decodeUtf32(List<int> bytes,
+    [int offset = 0,
+    int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  return new String.fromCharCodes((new Utf32BytesDecoder(bytes, offset, length,
-      replacementCodepoint)).decodeRest());
+  return new String.fromCharCodes(
+      (new Utf32BytesDecoder(bytes, offset, length, replacementCodepoint))
+          .decodeRest());
 }
+
 /**
  * Produce a String from a sequence of UTF-32BE encoded bytes. The parameters
  * allow an offset into a list of bytes (as int), limiting the length of the
@@ -67,11 +80,13 @@ String decodeUtf32(List<int> bytes, [int offset = 0, int length,
  * replacement character. Set the replacementCharacter to null to throw an
  * ArgumentError rather than replace the bad value.
  */
-String decodeUtf32be(
-    List<int> bytes, [int offset = 0, int length, bool stripBom = true,
-    int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) =>
-  new String.fromCharCodes((new Utf32beBytesDecoder(bytes, offset, length,
-    stripBom, replacementCodepoint)).decodeRest());
+String decodeUtf32be(List<int> bytes,
+        [int offset = 0,
+        int length,
+        bool stripBom = true,
+        int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) =>
+    new String.fromCharCodes((new Utf32beBytesDecoder(
+        bytes, offset, length, stripBom, replacementCodepoint)).decodeRest());
 
 /**
  * Produce a String from a sequence of UTF-32LE encoded bytes. The parameters
@@ -80,18 +95,19 @@ String decodeUtf32be(
  * replacement character. Set the replacementCharacter to null to throw an
  * ArgumentError rather than replace the bad value.
  */
-String decodeUtf32le(
-    List<int> bytes, [int offset = 0, int length, bool stripBom = true,
-    int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) =>
-    new String.fromCharCodes((new Utf32leBytesDecoder(bytes, offset, length,
-      stripBom, replacementCodepoint)).decodeRest());
+String decodeUtf32le(List<int> bytes,
+        [int offset = 0,
+        int length,
+        bool stripBom = true,
+        int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) =>
+    new String.fromCharCodes((new Utf32leBytesDecoder(
+        bytes, offset, length, stripBom, replacementCodepoint)).decodeRest());
 
 /**
  * Produce a list of UTF-32 encoded bytes. This method prefixes the resulting
  * bytes with a big-endian byte-order-marker.
  */
-List<int> encodeUtf32(String str) =>
-    encodeUtf32be(str, true);
+List<int> encodeUtf32(String str) => encodeUtf32be(str, true);
 
 /**
  * Produce a list of UTF-32BE encoded bytes. By default, this method produces
@@ -99,8 +115,8 @@ List<int> encodeUtf32(String str) =>
  */
 List<int> encodeUtf32be(String str, [bool writeBOM = false]) {
   List<int> utf32CodeUnits = stringToCodepoints(str);
-  List<int> encoding = new List<int>(4 * utf32CodeUnits.length +
-      (writeBOM ? 4 : 0));
+  List<int> encoding =
+      new List<int>(4 * utf32CodeUnits.length + (writeBOM ? 4 : 0));
   int i = 0;
   if (writeBOM) {
     encoding[i++] = 0;
@@ -123,8 +139,8 @@ List<int> encodeUtf32be(String str, [bool writeBOM = false]) {
  */
 List<int> encodeUtf32le(String str, [bool writeBOM = false]) {
   List<int> utf32CodeUnits = stringToCodepoints(str);
-  List<int> encoding = new List<int>(4 * utf32CodeUnits.length +
-      (writeBOM ? 4 : 0));
+  List<int> encoding =
+      new List<int>(4 * utf32CodeUnits.length + (writeBOM ? 4 : 0));
   int i = 0;
   if (writeBOM) {
     encoding[i++] = UNICODE_UTF_BOM_LO;
@@ -145,8 +161,7 @@ List<int> encodeUtf32le(String str, [bool writeBOM = false]) {
  * Identifies whether a List of bytes starts (based on offset) with a
  * byte-order marker (BOM).
  */
-bool hasUtf32Bom(
-    List<int> utf32EncodedBytes, [int offset = 0, int length]) {
+bool hasUtf32Bom(List<int> utf32EncodedBytes, [int offset = 0, int length]) {
   return hasUtf32beBom(utf32EncodedBytes, offset, length) ||
       hasUtf32leBom(utf32EncodedBytes, offset, length);
 }
@@ -158,7 +173,8 @@ bool hasUtf32Bom(
 bool hasUtf32beBom(List<int> utf32EncodedBytes, [int offset = 0, int length]) {
   int end = length != null ? offset + length : utf32EncodedBytes.length;
   return (offset + 4) <= end &&
-      utf32EncodedBytes[offset] == 0 && utf32EncodedBytes[offset + 1] == 0 &&
+      utf32EncodedBytes[offset] == 0 &&
+      utf32EncodedBytes[offset + 1] == 0 &&
       utf32EncodedBytes[offset + 2] == UNICODE_UTF_BOM_HI &&
       utf32EncodedBytes[offset + 3] == UNICODE_UTF_BOM_LO;
 }
@@ -172,7 +188,8 @@ bool hasUtf32leBom(List<int> utf32EncodedBytes, [int offset = 0, int length]) {
   return (offset + 4) <= end &&
       utf32EncodedBytes[offset] == UNICODE_UTF_BOM_LO &&
       utf32EncodedBytes[offset + 1] == UNICODE_UTF_BOM_HI &&
-      utf32EncodedBytes[offset + 2] == 0 && utf32EncodedBytes[offset + 3] == 0;
+      utf32EncodedBytes[offset + 2] == 0 &&
+      utf32EncodedBytes[offset + 3] == 0;
 }
 
 typedef Utf32BytesDecoder Utf32BytesDecoderProvider();
@@ -204,8 +221,9 @@ abstract class Utf32BytesDecoder implements ListRangeIterator {
   Utf32BytesDecoder._fromListRangeIterator(
       this.utf32EncodedBytesIterator, this.replacementCodepoint);
 
-  factory Utf32BytesDecoder(List<int> utf32EncodedBytes, [
-      int offset = 0, int length,
+  factory Utf32BytesDecoder(List<int> utf32EncodedBytes,
+      [int offset = 0,
+      int length,
       int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
     if (length == null) {
       length = utf32EncodedBytes.length - offset;
@@ -217,8 +235,8 @@ abstract class Utf32BytesDecoder implements ListRangeIterator {
       return new Utf32leBytesDecoder(utf32EncodedBytes, offset + 4, length - 4,
           false, replacementCodepoint);
     } else {
-      return new Utf32beBytesDecoder(utf32EncodedBytes, offset, length, false,
-          replacementCodepoint);
+      return new Utf32beBytesDecoder(
+          utf32EncodedBytes, offset, length, false, replacementCodepoint);
     }
   }
 
@@ -243,8 +261,8 @@ abstract class Utf32BytesDecoder implements ListRangeIterator {
     if (remaining < 4) {
       utf32EncodedBytesIterator.skip(utf32EncodedBytesIterator.remaining);
       if (replacementCodepoint != null) {
-          _current = replacementCodepoint;
-          return true;
+        _current = replacementCodepoint;
+        return true;
       } else {
         throw new ArgumentError(
             "Invalid UTF32 at ${utf32EncodedBytesIterator.position}");
@@ -283,12 +301,14 @@ abstract class Utf32BytesDecoder implements ListRangeIterator {
  * to produce the unicode codepoint.
  */
 class Utf32beBytesDecoder extends Utf32BytesDecoder {
-  Utf32beBytesDecoder(List<int> utf32EncodedBytes, [int offset = 0,
-      int length, bool stripBom = true,
-      int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) :
-      super._fromListRangeIterator(
-          (new ListRange(utf32EncodedBytes, offset, length)).iterator,
-          replacementCodepoint) {
+  Utf32beBytesDecoder(List<int> utf32EncodedBytes,
+      [int offset = 0,
+      int length,
+      bool stripBom = true,
+      int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
+      : super._fromListRangeIterator(
+            (new ListRange(utf32EncodedBytes, offset, length)).iterator,
+            replacementCodepoint) {
     if (stripBom && hasUtf32beBom(utf32EncodedBytes, offset, length)) {
       skip();
     }
@@ -312,12 +332,14 @@ class Utf32beBytesDecoder extends Utf32BytesDecoder {
  * to produce the unicode codepoint.
  */
 class Utf32leBytesDecoder extends Utf32BytesDecoder {
-  Utf32leBytesDecoder(List<int> utf32EncodedBytes, [int offset = 0,
-      int length, bool stripBom = true,
-      int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) :
-      super._fromListRangeIterator(
-          (new ListRange(utf32EncodedBytes, offset, length)).iterator,
-          replacementCodepoint) {
+  Utf32leBytesDecoder(List<int> utf32EncodedBytes,
+      [int offset = 0,
+      int length,
+      bool stripBom = true,
+      int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
+      : super._fromListRangeIterator(
+            (new ListRange(utf32EncodedBytes, offset, length)).iterator,
+            replacementCodepoint) {
     if (stripBom && hasUtf32leBom(utf32EncodedBytes, offset, length)) {
       skip();
     }
@@ -339,5 +361,5 @@ class Utf32leBytesDecoder extends Utf32BytesDecoder {
 bool _validCodepoint(int codepoint) {
   return (codepoint >= 0 && codepoint < UNICODE_UTF16_RESERVED_LO) ||
       (codepoint > UNICODE_UTF16_RESERVED_HI &&
-      codepoint < UNICODE_VALID_RANGE_MAX);
+          codepoint < UNICODE_VALID_RANGE_MAX);
 }

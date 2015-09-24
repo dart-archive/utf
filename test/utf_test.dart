@@ -4,13 +4,17 @@
 
 library utf.utf_test;
 
-import "package:expect/expect.dart";
+import 'package:test/test.dart';
 import "package:utf/utf.dart";
 
+import "expect.dart";
+
 main() {
-  String str = new String.fromCharCodes([0x1d537]);
-  // String.codeUnits gives 16-bit code units, but stringToCodepoints gives
-  // back the original code points.
-  Expect.listEquals([0xd835, 0xdd37], str.codeUnits);
-  Expect.listEquals([0x1d537], stringToCodepoints(str));
+  test('utf', () {
+    String str = new String.fromCharCodes([0x1d537]);
+    // String.codeUnits gives 16-bit code units, but stringToCodepoints gives
+    // back the original code points.
+    Expect.listEquals([0xd835, 0xdd37], str.codeUnits);
+    Expect.listEquals([0x1d537], stringToCodepoints(str));
+  });
 }

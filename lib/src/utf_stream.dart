@@ -2,7 +2,12 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-part of utf;
+library utf.utf_stream;
+
+import 'dart:async';
+
+import 'constants.dart';
+import 'util.dart';
 
 // TODO(floitsch): make this transformer reusable.
 abstract class _StringDecoder
@@ -16,15 +21,14 @@ abstract class _StringDecoder
   _StringDecoder(int this._replacementChar);
 
   Stream<String> bind(Stream<List<int>> stream) {
-    return new Stream.eventTransformed(
-        stream,
+    return new Stream<String>.eventTransformed(stream,
         (EventSink<String> sink) {
-          if (_outSink != null) {
-            throw new StateError("String decoder already used");
-          }
-          _outSink = sink;
-          return this;
-        });
+      if (_outSink != null) {
+        throw new StateError("String decoder already used");
+      }
+      _outSink = sink;
+      return this;
+    });
   }
 
   void add(List<int> bytes) {
@@ -117,31 +121,36 @@ abstract class _StringDecoder
 class Utf8DecoderTransformer extends _StringDecoder {
   Utf8DecoderTransformer(
       [int replacementChar = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
-    : super(replacementChar);
+      : super(replacementChar);
 
   int _processBytes(int getNext()) {
     int value = getNext();
-    if ((value & 0xFF) != value) return -1;  // Not a byte.
+    if ((value & 0xFF) != value) return -1; // Not a byte.
     if ((value & 0x80) == 0x80) {
       int additionalBytes;
       int min;
-      if ((value & 0xe0) == 0xc0) {  // 110xxxxx
+      if ((value & 0xe0) == 0xc0) {
+        // 110xxxxx
         value = value & 0x1F;
         additionalBytes = 1;
         min = 0x80;
-      } else if ((value & 0xf0) == 0xe0) {  // 1110xxxx
+      } else if ((value & 0xf0) == 0xe0) {
+        // 1110xxxx
         value = value & 0x0F;
         additionalBytes = 2;
         min = 0x800;
-      } else if ((value & 0xf8) == 0xf0) {  // 11110xxx
+      } else if ((value & 0xf8) == 0xf0) {
+        // 11110xxx
         value = value & 0x07;
         additionalBytes = 3;
         min = 0x10000;
-      } else if ((value & 0xfc) == 0xf8) {  // 111110xx
+      } else if ((value & 0xfc) == 0xf8) {
+        // 111110xx
         value = value & 0x03;
         additionalBytes = 4;
         min = 0x200000;
-      } else if ((value & 0xfe) == 0xfc) {  // 1111110x
+      } else if ((value & 0xfe) == 0xfc) {
+        // 1111110x
         value = value & 0x01;
         additionalBytes = 5;
         min = 0x4000000;
@@ -150,7 +159,7 @@ class Utf8DecoderTransformer extends _StringDecoder {
       }
       for (int i = 0; i < additionalBytes; i++) {
         int next = getNext();
-        if (next == null) return 0;  // Not enough chars, reset.
+        if (next == null) return 0; // Not enough chars, reset.
         if ((next & 0xc0) != 0x80 || (next & 0xff) != next) return -1;
         value = value << 6 | (next & 0x3f);
         if (additionalBytes >= 3 && i == 0 && value << 12 > 0x10FFFF) {
@@ -167,22 +176,19 @@ class Utf8DecoderTransformer extends _StringDecoder {
   }
 }
 
-
 abstract class _StringEncoder
     implements StreamTransformer<String, List<int>>, EventSink<String> {
-
   EventSink<List<int>> _outSink;
 
   Stream<List<int>> bind(Stream<String> stream) {
-    return new Stream.eventTransformed(
-        stream,
+    return new Stream<List<int>>.eventTransformed(stream,
         (EventSink<List<int>> sink) {
-          if (_outSink != null) {
-            throw new StateError("String encoder already used");
-          }
-          _outSink = sink;
-          return this;
-        });
+      if (_outSink != null) {
+        throw new StateError("String encoder already used");
+      }
+      _outSink = sink;
+      return this;
+    });
   }
 
   void add(String data) {
@@ -193,7 +199,9 @@ abstract class _StringEncoder
     _outSink.addError(error, stackTrace);
   }
 
-  void close() { _outSink.close(); }
+  void close() {
+    _outSink.close();
+  }
 
   List<int> _processString(String string);
 }
@@ -204,7 +212,6 @@ abstract class _StringEncoder
 class Utf8EncoderTransformer extends _StringEncoder {
   List<int> _processString(String string) {
     var bytes = <int>[];
-    int pos = 0;
     List<int> codepoints = utf16CodeUnitsToCodepoints(string.codeUnits);
     int length = codepoints.length;
     for (int i = 0; i < length; i++) {
@@ -219,7 +226,7 @@ class Utf8EncoderTransformer extends _StringEncoder {
         additionalBytes = 1;
       } else if (charCode <= 0xFFFF) {
         // 1110xxxx (xxxx is top 4 bits)
-        bytes.add(((charCode >> 12) & 0x0F)| 0xE0);
+        bytes.add(((charCode >> 12) & 0x0F) | 0xE0);
         additionalBytes = 2;
       } else {
         // 11110xxx (xxx is top 3 bits)
@@ -230,7 +237,6 @@ class Utf8EncoderTransformer extends _StringEncoder {
         // 10xxxxxx (xxxxxx is next 6 bits from the top).
         bytes.add(((charCode >> (6 * (i - 1))) & 0x3F) | 0x80);
       }
-      pos += additionalBytes + 1;
     }
     return bytes;
   }
