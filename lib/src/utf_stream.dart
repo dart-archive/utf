@@ -21,7 +21,8 @@ abstract class _StringDecoder
   _StringDecoder(int this._replacementChar);
 
   Stream<String> bind(Stream<List<int>> stream) {
-    return new Stream.eventTransformed(stream, (EventSink<String> sink) {
+    return new Stream<String>.eventTransformed(stream,
+        (EventSink<String> sink) {
       if (_outSink != null) {
         throw new StateError("String decoder already used");
       }
@@ -180,7 +181,8 @@ abstract class _StringEncoder
   EventSink<List<int>> _outSink;
 
   Stream<List<int>> bind(Stream<String> stream) {
-    return new Stream.eventTransformed(stream, (EventSink<List<int>> sink) {
+    return new Stream<List<int>>.eventTransformed(stream,
+        (EventSink<List<int>> sink) {
       if (_outSink != null) {
         throw new StateError("String encoder already used");
       }
