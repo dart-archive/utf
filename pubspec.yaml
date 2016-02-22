@@ -1,9 +1,8 @@
 name: utf
-version: 0.9.1-dev
+version: 0.9.0+3
 author: Dart Team <misc@dartlang.org>
 description: >
- A Unicode library. Intended for advanced use where the built-in facilities
- are too limiting.
+ Provides common operations for manipulating Unicode sequences
 homepage: https://www.github.com/dart-lang/utf
 environment:
   sdk: '>=1.0.0 <2.0.0'
