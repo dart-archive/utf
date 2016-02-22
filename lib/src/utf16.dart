@@ -107,7 +107,8 @@ String decodeUtf16be(List<int> bytes,
     bool stripBom = true,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   List<int> codeunits = (new Utf16beBytesToCodeUnitsDecoder(
-      bytes, offset, length, stripBom, replacementCodepoint)).decodeRest();
+          bytes, offset, length, stripBom, replacementCodepoint))
+      .decodeRest();
   return new String.fromCharCodes(
       utf16CodeUnitsToCodepoints(codeunits, 0, null, replacementCodepoint));
 }
@@ -125,7 +126,8 @@ String decodeUtf16le(List<int> bytes,
     bool stripBom = true,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   List<int> codeunits = (new Utf16leBytesToCodeUnitsDecoder(
-      bytes, offset, length, stripBom, replacementCodepoint)).decodeRest();
+          bytes, offset, length, stripBom, replacementCodepoint))
+      .decodeRest();
   return new String.fromCharCodes(
       utf16CodeUnitsToCodepoints(codeunits, 0, null, replacementCodepoint));
 }

@@ -86,7 +86,8 @@ String decodeUtf32be(List<int> bytes,
         bool stripBom = true,
         int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) =>
     new String.fromCharCodes((new Utf32beBytesDecoder(
-        bytes, offset, length, stripBom, replacementCodepoint)).decodeRest());
+            bytes, offset, length, stripBom, replacementCodepoint))
+        .decodeRest());
 
 /**
  * Produce a String from a sequence of UTF-32LE encoded bytes. The parameters
@@ -101,7 +102,8 @@ String decodeUtf32le(List<int> bytes,
         bool stripBom = true,
         int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) =>
     new String.fromCharCodes((new Utf32leBytesDecoder(
-        bytes, offset, length, stripBom, replacementCodepoint)).decodeRest());
+            bytes, offset, length, stripBom, replacementCodepoint))
+        .decodeRest());
 
 /**
  * Produce a list of UTF-32 encoded bytes. This method prefixes the resulting
