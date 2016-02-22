@@ -7,7 +7,7 @@ library utf.utf32_test;
 import 'package:test/test.dart';
 import 'package:utf/utf.dart';
 
-import 'expect.dart';
+import 'expect.dart' as Expect;
 
 const String testKoreanCharSubset = """
 가각갂갃간갅갆갇갈갉갊갋갌갍갎갏감갑값갓갔강갖갗갘같갚갛

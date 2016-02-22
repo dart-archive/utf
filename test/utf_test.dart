@@ -7,7 +7,7 @@ library utf.utf_test;
 import 'package:test/test.dart';
 import "package:utf/utf.dart";
 
-import "expect.dart";
+import "expect.dart" as Expect;
 
 main() {
   test('utf', () {

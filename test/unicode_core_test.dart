@@ -8,7 +8,7 @@ import 'package:test/test.dart';
 import 'package:utf/utf.dart';
 import 'package:utf/src/util.dart';
 
-import 'expect.dart';
+import 'expect.dart' as Expect;
 
 void main() {
   test('codepoints to utf16 codepoints', testCodepointsToUtf16CodeUnits);

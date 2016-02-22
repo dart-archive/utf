@@ -7,7 +7,7 @@ library utf.utf82_test;
 import 'package:test/test.dart';
 import 'package:utf/utf.dart';
 
-import 'expect.dart';
+import 'expect.dart' as Expect;
 
 const String testEnglishPhrase = "The quick brown fox jumps over the lazy dog.";
 
