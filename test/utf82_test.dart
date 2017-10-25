@@ -7,7 +7,7 @@ library utf.utf82_test;
 import 'package:test/test.dart';
 import 'package:utf/utf.dart';
 
-import 'expect.dart' as Expect;
+import 'expect.dart' as expect;
 
 const String testEnglishPhrase = "The quick brown fox jumps over the lazy dog.";
 
@@ -129,69 +129,69 @@ void main() {
 }
 
 void testEncodeToUtf8() {
-  Expect.listEquals(
+  expect.listEquals(
       testEnglishUtf8, encodeUtf8(testEnglishPhrase), "english to utf8");
 
-  Expect.listEquals(
+  expect.listEquals(
       testDanishUtf8, encodeUtf8(testDanishPhrase), "encode danish to utf8");
 
-  Expect.listEquals(
+  expect.listEquals(
       testHebrewUtf8, encodeUtf8(testHebrewPhrase), "Hebrew to utf8");
 
-  Expect.listEquals(
+  expect.listEquals(
       testRussianUtf8, encodeUtf8(testRussianPhrase), "Russian to utf8");
 
-  Expect.listEquals(
+  expect.listEquals(
       testGreekUtf8, encodeUtf8(testGreekPhrase), "Greek to utf8");
 
-  Expect.listEquals(
+  expect.listEquals(
       testKatakanaUtf8, encodeUtf8(testKatakanaPhrase), "Katakana to utf8");
 }
 
 void testUtf8bytesToCodepoints() {
-  Expect.listEquals(
+  expect.listEquals(
       [954, 972, 963, 956, 949],
       utf8ToCodepoints(
           [0xce, 0xba, 0xcf, 0x8c, 0xcf, 0x83, 0xce, 0xbc, 0xce, 0xb5]),
       "κόσμε");
 
   // boundary conditions: First possible sequence of a certain length
-  Expect.listEquals([], utf8ToCodepoints([]), "no input");
-  Expect.listEquals([0x0], utf8ToCodepoints([0x0]), "0");
-  Expect.listEquals([0x80], utf8ToCodepoints([0xc2, 0x80]), "80");
-  Expect.listEquals([0x800], utf8ToCodepoints([0xe0, 0xa0, 0x80]), "800");
-  Expect.listEquals(
+  expect.listEquals([], utf8ToCodepoints([]), "no input");
+  expect.listEquals([0x0], utf8ToCodepoints([0x0]), "0");
+  expect.listEquals([0x80], utf8ToCodepoints([0xc2, 0x80]), "80");
+  expect.listEquals([0x800], utf8ToCodepoints([0xe0, 0xa0, 0x80]), "800");
+  expect.listEquals(
       [0x10000], utf8ToCodepoints([0xf0, 0x90, 0x80, 0x80]), "10000");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf8, 0x88, 0x80, 0x80, 0x80]), "200000");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfc, 0x84, 0x80, 0x80, 0x80, 0x80]), "4000000");
 
   // boundary conditions: Last possible sequence of a certain length
-  Expect.listEquals([0x7f], utf8ToCodepoints([0x7f]), "7f");
-  Expect.listEquals([0x7ff], utf8ToCodepoints([0xdf, 0xbf]), "7ff");
-  Expect.listEquals([0xffff], utf8ToCodepoints([0xef, 0xbf, 0xbf]), "ffff");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([0x7f], utf8ToCodepoints([0x7f]), "7f");
+  expect.listEquals([0x7ff], utf8ToCodepoints([0xdf, 0xbf]), "7ff");
+  expect.listEquals([0xffff], utf8ToCodepoints([0xef, 0xbf, 0xbf]), "ffff");
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf7, 0xbf, 0xbf, 0xbf]), "1fffff");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfb, 0xbf, 0xbf, 0xbf, 0xbf]), "3ffffff");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfd, 0xbf, 0xbf, 0xbf, 0xbf, 0xbf]), "4000000");
 
   // other boundary conditions
-  Expect.listEquals([0xd7ff], utf8ToCodepoints([0xed, 0x9f, 0xbf]), "d7ff");
-  Expect.listEquals([0xe000], utf8ToCodepoints([0xee, 0x80, 0x80]), "e000");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([0xd7ff], utf8ToCodepoints([0xed, 0x9f, 0xbf]), "d7ff");
+  expect.listEquals([0xe000], utf8ToCodepoints([0xee, 0x80, 0x80]), "e000");
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xef, 0xbf, 0xbd]), "fffd");
-  Expect.listEquals(
+  expect.listEquals(
       [0x10ffff], utf8ToCodepoints([0xf4, 0x8f, 0xbf, 0xbf]), "10ffff");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf4, 0x90, 0x80, 0x80]), "110000");
 
   // unexpected continuation bytes
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0x80]), "80 => replacement character");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xbf]), "bf => replacement character");
 
   List<int> allContinuationBytes = <int>[];
@@ -200,7 +200,7 @@ void testUtf8bytesToCodepoints() {
     allContinuationBytes.add(i);
     matchingReplacementChars.add(UNICODE_REPLACEMENT_CHARACTER_CODEPOINT);
   }
-  Expect.listEquals(
+  expect.listEquals(
       matchingReplacementChars,
       utf8ToCodepoints(allContinuationBytes),
       "80 - bf => replacement character x 64");
@@ -211,7 +211,7 @@ void testUtf8bytesToCodepoints() {
     allFirstTwoByteSeq.addAll([i, 0x20]);
     matchingReplacementChars.addAll([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
   }
-  Expect.listEquals(
+  expect.listEquals(
       matchingReplacementChars,
       utf8ToCodepoints(allFirstTwoByteSeq),
       "c0 - df + space => replacement character + space x 32");
@@ -222,7 +222,7 @@ void testUtf8bytesToCodepoints() {
     allFirstThreeByteSeq.addAll([i, 0x20]);
     matchingReplacementChars.addAll([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
   }
-  Expect.listEquals(
+  expect.listEquals(
       matchingReplacementChars,
       utf8ToCodepoints(allFirstThreeByteSeq),
       "e0 - ef + space => replacement character x 16");
@@ -233,7 +233,7 @@ void testUtf8bytesToCodepoints() {
     allFirstFourByteSeq.addAll([i, 0x20]);
     matchingReplacementChars.addAll([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
   }
-  Expect.listEquals(
+  expect.listEquals(
       matchingReplacementChars,
       utf8ToCodepoints(allFirstFourByteSeq),
       "f0 - f7 + space => replacement character x 8");
@@ -244,7 +244,7 @@ void testUtf8bytesToCodepoints() {
     allFirstFiveByteSeq.addAll([i, 0x20]);
     matchingReplacementChars.addAll([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
   }
-  Expect.listEquals(
+  expect.listEquals(
       matchingReplacementChars,
       utf8ToCodepoints(allFirstFiveByteSeq),
       "f8 - fb + space => replacement character x 4");
@@ -255,50 +255,50 @@ void testUtf8bytesToCodepoints() {
     allFirstSixByteSeq.addAll([i, 0x20]);
     matchingReplacementChars.addAll([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
   }
-  Expect.listEquals(
+  expect.listEquals(
       matchingReplacementChars,
       utf8ToCodepoints(allFirstSixByteSeq),
       "fc - fd + space => replacement character x 2");
 
   // Sequences with last continuation byte missing
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xc2]), "2-byte sequence with last byte missing");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xe0, 0x80]), "3-byte sequence with last byte missing");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf0, 0x80, 0x80]),
       "4-byte sequence with last byte missing");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf8, 0x88, 0x80, 0x80]),
       "5-byte sequence with last byte missing");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfc, 0x80, 0x80, 0x80, 0x80]),
       "6-byte sequence with last byte missing");
 
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xdf]), "2-byte sequence with last byte missing (hi)");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xef, 0xbf]),
       "3-byte sequence with last byte missing (hi)");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf7, 0xbf, 0xbf]),
       "4-byte sequence with last byte missing (hi)");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfb, 0xbf, 0xbf, 0xbf]),
       "5-byte sequence with last byte missing (hi)");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfd, 0xbf, 0xbf, 0xbf, 0xbf]),
       "6-byte sequence with last byte missing (hi)");
 
   // Concatenation of incomplete sequences
-  Expect.listEquals(
+  expect.listEquals(
       [
         UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
         UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
@@ -326,11 +326,11 @@ void testUtf8bytesToCodepoints() {
       "Concatenation of incomplete sequences");
 
   // Impossible bytes
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfe]), "fe");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xff]), "ff");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
@@ -338,129 +338,129 @@ void testUtf8bytesToCodepoints() {
   ], utf8ToCodepoints([0xfe, 0xfe, 0xff, 0xff]), "fe fe ff ff");
 
   // Overlong sequences
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xc0, 0xaf]), "c0 af");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xe0, 0x80, 0xaf]), "e0 80 af");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf0, 0x80, 0x80, 0xaf]), "f0 80 80 af");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf8, 0x80, 0x80, 0x80, 0xaf]), "f8 80 80 80 af");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfc, 0x80, 0x80, 0x80, 0x80, 0xaf]),
       "fc 80 80 80 80 af");
 
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xc1, 0xbf]), "c1 bf");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xe0, 0x9f, 0xbf]), "e0 9f bf");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf0, 0x8f, 0xbf, 0xbf]), "f0 8f bf bf");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf8, 0x87, 0xbf, 0xbf, 0xbf]), "f8 87 bf bf bf");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfc, 0x83, 0xbf, 0xbf, 0xbf, 0xbf]),
       "fc 83 bf bf bf bf");
 
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xc0, 0x80]), "c0 80");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xe0, 0x80, 0x80]), "e0 80 80");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf0, 0x80, 0x80, 0x80]), "f0 80 80 80");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xf8, 0x80, 0x80, 0x80, 0x80]), "f8 80 80 80 80");
-  Expect.listEquals(
+  expect.listEquals(
       [UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xfc, 0x80, 0x80, 0x80, 0x80, 0x80]),
       "fc 80 80 80 80 80");
 
   // Illegal code positions
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xa0, 0x80]), "U+D800");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xad, 0xbf]), "U+DB7F");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xae, 0x80]), "U+DB80");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xaf, 0xbf]), "U+DBFF");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xb0, 0x80]), "U+DC00");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xbe, 0x80]), "U+DF80");
-  Expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
+  expect.listEquals([UNICODE_REPLACEMENT_CHARACTER_CODEPOINT],
       utf8ToCodepoints([0xed, 0xbf, 0xbf]), "U+DFFF");
 
   // Paired UTF-16 surrogates
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xa0, 0x80, 0xed, 0xb0, 0x80]), "U+D800 U+DC00");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xa0, 0x80, 0xed, 0xbf, 0xbf]), "U+D800 U+DFFF");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xad, 0xbf, 0xed, 0xb0, 0x80]), "U+DB7F U+DC00");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xad, 0xbf, 0xed, 0xbf, 0xbf]), "U+DB7F U+DFFF");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xae, 0x80, 0xed, 0xb0, 0x80]), "U+DB80 U+DC00");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xae, 0x80, 0xed, 0xbf, 0xbf]), "U+DB80 U+DFFF");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xaf, 0xbf, 0xed, 0xb0, 0x80]), "U+DBFF U+DC00");
-  Expect.listEquals([
+  expect.listEquals([
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT,
     UNICODE_REPLACEMENT_CHARACTER_CODEPOINT
   ], utf8ToCodepoints([0xed, 0xaf, 0xbf, 0xed, 0xbf, 0xbf]), "U+DBFF U+DFFF");
 
   // Other illegal code positions (???)
-  Expect.listEquals([0xfffe], utf8ToCodepoints([0xef, 0xbf, 0xbe]), "U+FFFE");
-  Expect.listEquals([0xffff], utf8ToCodepoints([0xef, 0xbf, 0xbf]), "U+FFFF");
+  expect.listEquals([0xfffe], utf8ToCodepoints([0xef, 0xbf, 0xbe]), "U+FFFE");
+  expect.listEquals([0xffff], utf8ToCodepoints([0xef, 0xbf, 0xbf]), "U+FFFF");
 }
 
 void testUtf8BytesToString() {
-  Expect.stringEquals(
+  expect.stringEquals(
       testEnglishPhrase, decodeUtf8(testEnglishUtf8), "English");
 
-  Expect.stringEquals(testDanishPhrase, decodeUtf8(testDanishUtf8), "Danish");
+  expect.stringEquals(testDanishPhrase, decodeUtf8(testDanishUtf8), "Danish");
 
-  Expect.stringEquals(testHebrewPhrase, decodeUtf8(testHebrewUtf8), "Hebrew");
+  expect.stringEquals(testHebrewPhrase, decodeUtf8(testHebrewUtf8), "Hebrew");
 
-  Expect.stringEquals(
+  expect.stringEquals(
       testRussianPhrase, decodeUtf8(testRussianUtf8), "Russian");
 
-  Expect.stringEquals(testGreekPhrase, decodeUtf8(testGreekUtf8), "Greek");
+  expect.stringEquals(testGreekPhrase, decodeUtf8(testGreekUtf8), "Greek");
 
-  Expect.stringEquals(
+  expect.stringEquals(
       testKatakanaPhrase, decodeUtf8(testKatakanaUtf8), "Katakana");
 }
 
 void testIterableMethods() {
   IterableUtf8Decoder englishDecoder = decodeUtf8AsIterable(testEnglishUtf8);
   // get the first character
-  Expect.equals(testEnglishUtf8[0], englishDecoder.first);
+  expect.equals(testEnglishUtf8[0], englishDecoder.first);
   // get the whole translation using the Iterable interface
-  Expect.stringEquals(testEnglishPhrase,
+  expect.stringEquals(testEnglishPhrase,
       new String.fromCharCodes(new List<int>.from(englishDecoder)));
 
   IterableUtf8Decoder kataDecoder = decodeUtf8AsIterable(testKatakanaUtf8);
   // get the first character
-  Expect.equals(testKatakanaPhrase.codeUnits[0], kataDecoder.first);
+  expect.equals(testKatakanaPhrase.codeUnits[0], kataDecoder.first);
   // get the whole translation using the Iterable interface
-  Expect.stringEquals(testKatakanaPhrase,
+  expect.stringEquals(testKatakanaPhrase,
       new String.fromCharCodes(new List<int>.from(kataDecoder)));
 }

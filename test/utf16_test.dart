@@ -7,7 +7,7 @@ library utf.utf16_test;
 import 'package:test/test.dart';
 import 'package:utf/utf.dart';
 
-import 'expect.dart' as Expect;
+import 'expect.dart' as expect;
 
 const String testKoreanCharSubset = """
 가각갂갃간갅갆갇갈갉갊갋갌갍갎갏감갑값갓갔강갖갗갘같갚갛
@@ -73,61 +73,61 @@ void main() {
 }
 
 void testEncodeToUtf16() {
-  Expect.listEquals(
+  expect.listEquals(
       [], encodeUtf16be("")); // TODO(dcarlson) should we skip bom if empty?
-  Expect.listEquals(testKoreanCharSubsetUtf16beBom,
+  expect.listEquals(testKoreanCharSubsetUtf16beBom,
       encodeUtf16(testKoreanCharSubset), "encode UTF-16(BE by default) Korean");
 
-  Expect.listEquals(testKoreanCharSubsetUtf16le,
+  expect.listEquals(testKoreanCharSubsetUtf16le,
       encodeUtf16le(testKoreanCharSubset), "encode UTF-16LE Korean");
 }
 
 void testUtf16BytesToString() {
-  Expect.stringEquals("", decodeUtf16([]));
-  Expect.stringEquals(
+  expect.stringEquals("", decodeUtf16([]));
+  expect.stringEquals(
       testHanWater, decodeUtf16([0x6C, 0x34]), "Water variation 1");
-  Expect.stringEquals(
+  expect.stringEquals(
       testHanWater, decodeUtf16([0xFE, 0xFF, 0x6C, 0x34]), "Water variation 2");
-  Expect.stringEquals(
+  expect.stringEquals(
       testHanWater, decodeUtf16([0xFF, 0xFE, 0x34, 0x6C]), "Water variation 3");
 
-  Expect.stringEquals(
+  expect.stringEquals(
       testHanWater, decodeUtf16be([0x6C, 0x34]), "Water variation 4");
-  Expect.stringEquals(testHanWater, decodeUtf16be([0xFE, 0xFF, 0x6C, 0x34]),
+  expect.stringEquals(testHanWater, decodeUtf16be([0xFE, 0xFF, 0x6C, 0x34]),
       "Water variation 5");
 
-  Expect.stringEquals(
+  expect.stringEquals(
       testHanWater, decodeUtf16le([0x34, 0x6C]), "Water variation 6");
-  Expect.stringEquals(testHanWater, decodeUtf16le([0xFF, 0xFE, 0x34, 0x6C]),
+  expect.stringEquals(testHanWater, decodeUtf16le([0xFF, 0xFE, 0x34, 0x6C]),
       "Water variation 7");
 
-  Expect.stringEquals(testKoreanCharSubset,
+  expect.stringEquals(testKoreanCharSubset,
       decodeUtf16(testKoreanCharSubsetUtf16beBom), "UTF-16BE Korean");
 }
 
 void testIterableMethods() {
   // empty input
-  Expect.isFalse(decodeUtf16AsIterable([]).iterator.moveNext());
+  expect.isFalse(decodeUtf16AsIterable([]).iterator.moveNext());
 
   IterableUtf16Decoder koreanDecoder =
       decodeUtf16AsIterable(testKoreanCharSubsetUtf16beBom);
   // get the first character
-  Expect.equals(testKoreanCharSubset.codeUnits[0], koreanDecoder.first);
+  expect.equals(testKoreanCharSubset.codeUnits[0], koreanDecoder.first);
   // get the whole translation using the Iterable interface
-  Expect.stringEquals(testKoreanCharSubset,
+  expect.stringEquals(testKoreanCharSubset,
       new String.fromCharCodes(new List<int>.from(koreanDecoder)));
 
   // specify types
-  Expect.equals(
+  expect.equals(
       44032,
       (new List<int>.from(
           decodeUtf16beAsIterable(testKoreanCharSubsetUtf16beBom)))[0]);
-  Expect.equals(
+  expect.equals(
       44032,
       (new List<int>.from(
           decodeUtf16leAsIterable(testKoreanCharSubsetUtf16le)))[0]);
   bool stripBom = false;
-  Expect.equals(
+  expect.equals(
       UNICODE_BOM,
       (new List<int>.from(decodeUtf16beAsIterable(
           testKoreanCharSubsetUtf16beBom, 0, null, stripBom)))[0]);
