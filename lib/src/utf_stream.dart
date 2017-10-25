@@ -18,7 +18,7 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
 
   EventSink<String> _outSink;
 
-  _StringDecoder(int this._replacementChar);
+  _StringDecoder(this._replacementChar);
 
   Stream<String> bind(Stream<List<int>> stream) {
     return new Stream<String>.eventTransformed(stream,
