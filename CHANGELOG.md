@@ -1,3 +1,7 @@
+## 0.9.0+5
+
+* Set max SDK version to `<3.0.0`, and adjust other dependencies.
+
 ## 0.9.0+4
 
 * Updates to support Dart 2.0 core library changes (wave

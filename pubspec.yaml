@@ -1,10 +1,12 @@
 name: utf
-version: 0.9.0+4
+version: 0.9.0+5
+
+description: Provides common operations for manipulating Unicode sequences
 author: Dart Team <misc@dartlang.org>
-description: >
- Provides common operations for manipulating Unicode sequences
 homepage: https://www.github.com/dart-lang/utf
+
 environment:
-  sdk: '>=2.0.0-dev.20.0 <2.0.0'
+  sdk: '>=2.0.0-dev.20.0 <3.0.0'
+
 dev_dependencies:
-  test: ^0.12.0
+  test: ^1.2.0
