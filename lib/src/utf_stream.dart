@@ -12,9 +12,9 @@ import 'util.dart';
 // TODO(floitsch): make this transformer reusable.
 abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
     implements EventSink<List<int>> {
+  final int _replacementChar;
   List<int> _carry;
   List<int> _buffer;
-  int _replacementChar;
 
   EventSink<String> _outSink;
 
