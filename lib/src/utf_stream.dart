@@ -21,10 +21,9 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
   _StringDecoder(this._replacementChar);
 
   Stream<String> bind(Stream<List<int>> stream) {
-    return new Stream<String>.eventTransformed(stream,
-        (EventSink<String> sink) {
+    return Stream<String>.eventTransformed(stream, (EventSink<String> sink) {
       if (_outSink != null) {
-        throw new StateError("String decoder already used");
+        throw StateError("String decoder already used");
       }
       _outSink = sink;
       return this;
@@ -73,9 +72,9 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
           goodChars = _buffer.length;
         }
       }
-      if (_buffer.length > 0) {
+      if (_buffer.isNotEmpty) {
         // Limit to 'goodChars', if lower than actual charCodes in the buffer.
-        _outSink.add(new String.fromCharCodes(_buffer));
+        _outSink.add(String.fromCharCodes(_buffer));
       }
       _buffer = null;
     } catch (e, stackTrace) {
@@ -90,10 +89,10 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
   void close() {
     if (_carry != null) {
       if (_replacementChar != null) {
-        _outSink.add(new String.fromCharCodes(
-            new List.filled(_carry.length, _replacementChar)));
+        _outSink.add(
+            String.fromCharCodes(List.filled(_carry.length, _replacementChar)));
       } else {
-        throw new ArgumentError('Invalid codepoint');
+        throw ArgumentError('Invalid codepoint');
       }
     }
     _outSink.close();
@@ -106,7 +105,7 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
       if (_replacementChar != null) {
         char = _replacementChar;
       } else {
-        throw new ArgumentError('Invalid codepoint');
+        throw ArgumentError('Invalid codepoint');
       }
     }
 
@@ -117,9 +116,7 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
   }
 }
 
-/**
- * StringTransformer that decodes a stream of UTF-8 encoded bytes.
- */
+/// StringTransformer that decodes a stream of UTF-8 encoded bytes.
 class Utf8DecoderTransformer extends _StringDecoder {
   Utf8DecoderTransformer(
       [int replacementChar = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
@@ -183,10 +180,10 @@ abstract class _StringEncoder extends StreamTransformerBase<String, List<int>>
   EventSink<List<int>> _outSink;
 
   Stream<List<int>> bind(Stream<String> stream) {
-    return new Stream<List<int>>.eventTransformed(stream,
+    return Stream<List<int>>.eventTransformed(stream,
         (EventSink<List<int>> sink) {
       if (_outSink != null) {
-        throw new StateError("String encoder already used");
+        throw StateError("String encoder already used");
       }
       _outSink = sink;
       return this;
@@ -208,9 +205,7 @@ abstract class _StringEncoder extends StreamTransformerBase<String, List<int>>
   List<int> _processString(String string);
 }
 
-/**
- * StringTransformer that UTF-8 encodes a stream of strings.
- */
+/// StringTransformer that UTF-8 encodes a stream of strings.
 class Utf8EncoderTransformer extends _StringEncoder {
   List<int> _processString(String string) {
     var bytes = <int>[];

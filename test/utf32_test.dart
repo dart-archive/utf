@@ -16,7 +16,7 @@ const String testKoreanCharSubset = """
 
 const String testHanTwice = "二";
 
-const List<int> testKoreanCharSubsetUtf32beBom = const <int>[
+const List<int> testKoreanCharSubsetUtf32beBom = <int>[
   0x00, 0x00, 0xfe, 0xff, 0x00, 0x00, 0xac, 0x00, // 8
   0x00, 0x00, 0xac, 0x01, 0x00, 0x00, 0xac, 0x02,
   0x00, 0x00, 0xac, 0x03, 0x00, 0x00, 0xac, 0x04,
@@ -63,7 +63,7 @@ const List<int> testKoreanCharSubsetUtf32beBom = const <int>[
   0x00, 0x00, 0xac, 0x53
 ];
 
-const List<int> testKoreanCharSubsetUtf32le = const <int>[
+const List<int> testKoreanCharSubsetUtf32le = <int>[
   0x00, 0xac, 0x00, 0x00, 0x01, 0xac, 0x00, 0x00, // 8
   0x02, 0xac, 0x00, 0x00, 0x03, 0xac, 0x00, 0x00,
   0x04, 0xac, 0x00, 0x00, 0x05, 0xac, 0x00, 0x00,
@@ -164,20 +164,20 @@ void testIterableMethods() {
   expect.equals(testKoreanCharSubset.codeUnits[0], koreanDecoder.first);
   // get the whole translation using the Iterable interface
   expect.stringEquals(testKoreanCharSubset,
-      new String.fromCharCodes(new List<int>.from(koreanDecoder)));
+      String.fromCharCodes(List<int>.from(koreanDecoder)));
 
   // specify types
   expect.equals(
       44032,
-      (new List<int>.from(
+      (List<int>.from(
           decodeUtf32beAsIterable(testKoreanCharSubsetUtf32beBom)))[0]);
   expect.equals(
       44032,
-      (new List<int>.from(
+      (List<int>.from(
           decodeUtf32leAsIterable(testKoreanCharSubsetUtf32le)))[0]);
   bool stripBom = false;
   expect.equals(
       UNICODE_BOM,
-      (new List<int>.from(decodeUtf32beAsIterable(
+      (List<int>.from(decodeUtf32beAsIterable(
           testKoreanCharSubsetUtf32beBom, 0, null, stripBom)))[0]);
 }

@@ -8,18 +8,16 @@ import 'constants.dart';
 import 'list_range.dart';
 import 'utf_16_code_unit_decoder.dart';
 
-/**
- * Decodes the utf16 codeunits to codepoints.
- */
+/// Decodes the utf16 codeunits to codepoints.
 List<int> utf16CodeUnitsToCodepoints(List<int> utf16CodeUnits,
     [int offset = 0,
     int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
   ListRangeIterator source =
-      (new ListRange(utf16CodeUnits, offset, length)).iterator;
-  Utf16CodeUnitDecoder decoder = new Utf16CodeUnitDecoder.fromListRangeIterator(
-      source, replacementCodepoint);
-  List<int> codepoints = new List<int>(source.remaining);
+      (ListRange(utf16CodeUnits, offset, length)).iterator;
+  Utf16CodeUnitDecoder decoder =
+      Utf16CodeUnitDecoder.fromListRangeIterator(source, replacementCodepoint);
+  List<int> codepoints = List<int>(source.remaining);
   int i = 0;
   while (decoder.moveNext()) {
     codepoints[i++] = decoder.current;
@@ -27,20 +25,18 @@ List<int> utf16CodeUnitsToCodepoints(List<int> utf16CodeUnits,
   if (i == codepoints.length) {
     return codepoints;
   } else {
-    List<int> codepointTrunc = new List<int>(i);
+    List<int> codepointTrunc = List<int>(i);
     codepointTrunc.setRange(0, i, codepoints);
     return codepointTrunc;
   }
 }
 
-/**
- * Encode code points as UTF16 code units.
- */
+/// Encode code points as UTF16 code units.
 List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     [int offset = 0,
     int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  ListRange listRange = new ListRange(codepoints, offset, length);
+  ListRange listRange = ListRange(codepoints, offset, length);
   int encodedLength = 0;
   for (int value in listRange) {
     if ((value >= 0 && value < UNICODE_UTF16_RESERVED_LO) ||
@@ -54,7 +50,7 @@ List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     }
   }
 
-  List<int> codeUnitsBuffer = new List<int>(encodedLength);
+  List<int> codeUnitsBuffer = List<int>(encodedLength);
   int j = 0;
   for (int value in listRange) {
     if ((value >= 0 && value < UNICODE_UTF16_RESERVED_LO) ||
@@ -70,7 +66,7 @@ List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     } else if (replacementCodepoint != null) {
       codeUnitsBuffer[j++] = replacementCodepoint;
     } else {
-      throw new ArgumentError("Invalid encoding");
+      throw ArgumentError("Invalid encoding");
     }
   }
   return codeUnitsBuffer;

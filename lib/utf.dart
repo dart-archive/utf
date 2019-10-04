@@ -2,10 +2,8 @@
 // for details. All rights reserved. Use of this source code is governed by a
 // BSD-style license that can be found in the LICENSE file.
 
-/**
- * Support for encoding and decoding Unicode characters in UTF-8, UTF-16, and
- * UTF-32.
- */
+/// Support for encoding and decoding Unicode characters in UTF-8, UTF-16, and
+/// UTF-32.
 library utf;
 
 export 'src/constants.dart';

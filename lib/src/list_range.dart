@@ -6,11 +6,9 @@ library utf.list_range;
 
 import 'dart:collection';
 
-/**
- * _ListRange in an internal type used to create a lightweight Interable on a
- * range within a source list. DO NOT MODIFY the underlying list while
- * iterating over it. The results of doing so are undefined.
- */
+/// _ListRange in an internal type used to create a lightweight Interable on a
+/// range within a source list. DO NOT MODIFY the underlying list while
+/// iterating over it. The results of doing so are undefined.
 // TODO(floitsch): Consider removing the extend and switch to implements since
 // that's cheaper to allocate.
 class ListRange extends IterableBase<int> {
@@ -23,27 +21,25 @@ class ListRange extends IterableBase<int> {
         this._offset = offset,
         this._length = (length == null ? source.length - offset : length) {
     if (_offset < 0 || _offset > _source.length) {
-      throw new RangeError.value(_offset);
+      throw RangeError.value(_offset);
     }
     if (_length != null && (_length < 0)) {
-      throw new RangeError.value(_length);
+      throw RangeError.value(_length);
     }
     if (_length + _offset > _source.length) {
-      throw new RangeError.value(_length + _offset);
+      throw RangeError.value(_length + _offset);
     }
   }
 
   ListRangeIterator get iterator =>
-      new _ListRangeIteratorImpl(_source, _offset, _offset + _length);
+      _ListRangeIteratorImpl(_source, _offset, _offset + _length);
 
   int get length => _length;
 }
 
-/**
- * The ListRangeIterator provides more capabilities than a standard iterator,
- * including the ability to get the current position, count remaining items,
- * and move forward/backward within the iterator.
- */
+/// The ListRangeIterator provides more capabilities than a standard iterator,
+/// including the ability to get the current position, count remaining items,
+/// and move forward/backward within the iterator.
 abstract class ListRangeIterator implements Iterator<int> {
   bool moveNext();
   int get current;

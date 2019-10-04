@@ -11,7 +11,7 @@ import 'expect.dart' as expect;
 
 const String testEnglishPhrase = "The quick brown fox jumps over the lazy dog.";
 
-const List<int> testEnglishUtf8 = const <int>[
+const List<int> testEnglishUtf8 = <int>[
   0x54, 0x68, 0x65, 0x20, 0x71, 0x75, 0x69, 0x63, // 8
   0x6b, 0x20, 0x62, 0x72, 0x6f, 0x77, 0x6e, 0x20,
   0x66, 0x6f, 0x78, 0x20, 0x6a, 0x75, 0x6d, 0x70,
@@ -23,7 +23,7 @@ const List<int> testEnglishUtf8 = const <int>[
 const String testDanishPhrase = "Quizdeltagerne spiste jordbær med "
     "fløde mens cirkusklovnen Wolther spillede på xylofon.";
 
-const List<int> testDanishUtf8 = const <int>[
+const List<int> testDanishUtf8 = <int>[
   0x51, 0x75, 0x69, 0x7a, 0x64, 0x65, 0x6c, 0x74, // 8
   0x61, 0x67, 0x65, 0x72, 0x6e, 0x65, 0x20, 0x73,
   0x70, 0x69, 0x73, 0x74, 0x65, 0x20, 0x6a, 0x6f,
@@ -42,7 +42,7 @@ const List<int> testDanishUtf8 = const <int>[
 const String testHebrewPhrase =
     "דג סקרן שט בים מאוכזב ולפתע מצא לו חברה איך הקליטה";
 
-const List<int> testHebrewUtf8 = const <int>[
+const List<int> testHebrewUtf8 = <int>[
   0xd7, 0x93, 0xd7, 0x92, 0x20, 0xd7, 0xa1, 0xd7, // 8
   0xa7, 0xd7, 0xa8, 0xd7, 0x9f, 0x20, 0xd7, 0xa9,
   0xd7, 0x98, 0x20, 0xd7, 0x91, 0xd7, 0x99, 0xd7,
@@ -60,7 +60,7 @@ const List<int> testHebrewUtf8 = const <int>[
 const String testRussianPhrase = "Съешь же ещё этих мягких "
     "французских булок да выпей чаю";
 
-const List<int> testRussianUtf8 = const <int>[
+const List<int> testRussianUtf8 = <int>[
   0xd0, 0xa1, 0xd1, 0x8a, 0xd0, 0xb5, 0xd1, 0x88, // 8
   0xd1, 0x8c, 0x20, 0xd0, 0xb6, 0xd0, 0xb5, 0x20,
   0xd0, 0xb5, 0xd1, 0x89, 0xd1, 0x91, 0x20, 0xd1,
@@ -79,7 +79,7 @@ const List<int> testRussianUtf8 = const <int>[
 const String testGreekPhrase = "Γαζέες καὶ μυρτιὲς δὲν θὰ βρῶ πιὰ "
     "στὸ χρυσαφὶ ξέφωτο";
 
-const List<int> testGreekUtf8 = const <int>[
+const List<int> testGreekUtf8 = <int>[
   0xce, 0x93, 0xce, 0xb1, 0xce, 0xb6, 0xce, 0xad, // 8
   0xce, 0xb5, 0xcf, 0x82, 0x20, 0xce, 0xba, 0xce,
   0xb1, 0xe1, 0xbd, 0xb6, 0x20, 0xce, 0xbc, 0xcf,
@@ -99,7 +99,7 @@ const String testKatakanaPhrase = """
 イロハニホヘト チリヌルヲ ワカヨタレソ ツネナラム
 ウヰノオクヤマ ケフコエテ アサキユメミシ ヱヒモセスン""";
 
-const List<int> testKatakanaUtf8 = const <int>[
+const List<int> testKatakanaUtf8 = <int>[
   0xe3, 0x82, 0xa4, 0xe3, 0x83, 0xad, 0xe3, 0x83, // 8
   0x8f, 0xe3, 0x83, 0x8b, 0xe3, 0x83, 0x9b, 0xe3,
   0x83, 0x98, 0xe3, 0x83, 0x88, 0x20, 0xe3, 0x83,
@@ -454,13 +454,13 @@ void testIterableMethods() {
   // get the first character
   expect.equals(testEnglishUtf8[0], englishDecoder.first);
   // get the whole translation using the Iterable interface
-  expect.stringEquals(testEnglishPhrase,
-      new String.fromCharCodes(new List<int>.from(englishDecoder)));
+  expect.stringEquals(
+      testEnglishPhrase, String.fromCharCodes(List<int>.from(englishDecoder)));
 
   IterableUtf8Decoder kataDecoder = decodeUtf8AsIterable(testKatakanaUtf8);
   // get the first character
   expect.equals(testKatakanaPhrase.codeUnits[0], kataDecoder.first);
   // get the whole translation using the Iterable interface
-  expect.stringEquals(testKatakanaPhrase,
-      new String.fromCharCodes(new List<int>.from(kataDecoder)));
+  expect.stringEquals(
+      testKatakanaPhrase, String.fromCharCodes(List<int>.from(kataDecoder)));
 }
