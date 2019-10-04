@@ -4,9 +4,7 @@
 
 library utf.constants;
 
-/**
- * Invalid codepoints or encodings may be substituted with the value U+fffd.
- */
+/// Invalid codepoints or encodings may be substituted with the value U+fffd.
 const int UNICODE_REPLACEMENT_CHARACTER_CODEPOINT = 0xfffd;
 const int UNICODE_BOM = 0xfeff;
 const int UNICODE_UTF_BOM_LO = 0xff;

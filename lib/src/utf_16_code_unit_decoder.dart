@@ -7,12 +7,10 @@ library utf.utf_16_code_unit_decoder;
 import 'constants.dart';
 import 'list_range.dart';
 
-/**
- * An Iterator<int> of codepoints built on an Iterator of UTF-16 code units.
- * The parameters can override the default Unicode replacement character. Set
- * the replacementCharacter to null to throw an ArgumentError
- * rather than replace the bad value.
- */
+/// An Iterator<int> of codepoints built on an Iterator of UTF-16 code units.
+/// The parameters can override the default Unicode replacement character. Set
+/// the replacementCharacter to null to throw an ArgumentError
+/// rather than replace the bad value.
 class Utf16CodeUnitDecoder implements Iterator<int> {
   // TODO(kevmoo): should this field be private?
   final ListRangeIterator utf16CodeUnitIterator;
@@ -24,7 +22,7 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
       int length,
       this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
       : utf16CodeUnitIterator =
-            (new ListRange(utf16CodeUnits, offset, length)).iterator;
+            (ListRange(utf16CodeUnits, offset, length)).iterator;
 
   Utf16CodeUnitDecoder.fromListRangeIterator(
       this.utf16CodeUnitIterator, this.replacementCodepoint);
@@ -42,7 +40,7 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
       if (replacementCodepoint != null) {
         _current = replacementCodepoint;
       } else {
-        throw new ArgumentError(
+        throw ArgumentError(
             "Invalid UTF16 at ${utf16CodeUnitIterator.position}");
       }
     } else if (value < UNICODE_UTF16_RESERVED_LO ||
@@ -67,15 +65,14 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
         if (replacementCodepoint != null) {
           _current = replacementCodepoint;
         } else {
-          throw new ArgumentError(
+          throw ArgumentError(
               "Invalid UTF16 at ${utf16CodeUnitIterator.position}");
         }
       }
     } else if (replacementCodepoint != null) {
       _current = replacementCodepoint;
     } else {
-      throw new ArgumentError(
-          "Invalid UTF16 at ${utf16CodeUnitIterator.position}");
+      throw ArgumentError("Invalid UTF16 at ${utf16CodeUnitIterator.position}");
     }
     return true;
   }
