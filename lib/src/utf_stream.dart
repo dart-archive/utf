@@ -20,29 +20,31 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
 
   _StringDecoder(this._replacementChar);
 
+  @override
   Stream<String> bind(Stream<List<int>> stream) {
     return Stream<String>.eventTransformed(stream, (EventSink<String> sink) {
       if (_outSink != null) {
-        throw StateError("String decoder already used");
+        throw StateError('String decoder already used');
       }
       _outSink = sink;
       return this;
     });
   }
 
+  @override
   void add(List<int> bytes) {
     try {
       _buffer = <int>[];
-      List<int> carry = _carry;
+      var carry = _carry;
       _carry = null;
-      int pos = 0;
-      int available = bytes.length;
+      var pos = 0;
+      var available = bytes.length;
       // If we have carry-over data, start from negative index, indicating carry
       // index.
-      int goodChars = 0;
+      var goodChars = 0;
       if (carry != null) pos = -carry.length;
       while (pos < available) {
-        int currentPos = pos;
+        var currentPos = pos;
         int getNext() {
           if (pos < 0) {
             return carry[pos++ + carry.length];
@@ -52,7 +54,7 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
           return null;
         }
 
-        int consumed = _processBytes(getNext);
+        var consumed = _processBytes(getNext);
         if (consumed > 0) {
           goodChars = _buffer.length;
         } else if (consumed == 0) {
@@ -82,10 +84,12 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
     }
   }
 
+  @override
   void addError(error, [StackTrace stackTrace]) {
     _outSink.addError(error, stackTrace);
   }
 
+  @override
   void close() {
     if (_carry != null) {
       if (_replacementChar != null) {
@@ -98,7 +102,7 @@ abstract class _StringDecoder extends StreamTransformerBase<List<int>, String>
     _outSink.close();
   }
 
-  int _processBytes(int getNext());
+  int _processBytes(int Function() getNext);
 
   void _addChar(int char) {
     void error() {
@@ -122,8 +126,9 @@ class Utf8DecoderTransformer extends _StringDecoder {
       [int replacementChar = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
       : super(replacementChar);
 
-  int _processBytes(int getNext()) {
-    int value = getNext();
+  @override
+  int _processBytes(int Function() getNext) {
+    var value = getNext();
     if ((value & 0xFF) != value) return -1; // Not a byte.
     if ((value & 0x80) == 0x80) {
       int additionalBytes;
@@ -156,8 +161,8 @@ class Utf8DecoderTransformer extends _StringDecoder {
       } else {
         return -1;
       }
-      for (int i = 0; i < additionalBytes; i++) {
-        int next = getNext();
+      for (var i = 0; i < additionalBytes; i++) {
+        var next = getNext();
         if (next == null) return 0; // Not enough chars, reset.
         if ((next & 0xc0) != 0x80 || (next & 0xff) != next) return -1;
         value = value << 6 | (next & 0x3f);
@@ -179,25 +184,29 @@ abstract class _StringEncoder extends StreamTransformerBase<String, List<int>>
     implements EventSink<String> {
   EventSink<List<int>> _outSink;
 
+  @override
   Stream<List<int>> bind(Stream<String> stream) {
     return Stream<List<int>>.eventTransformed(stream,
         (EventSink<List<int>> sink) {
       if (_outSink != null) {
-        throw StateError("String encoder already used");
+        throw StateError('String encoder already used');
       }
       _outSink = sink;
       return this;
     });
   }
 
+  @override
   void add(String data) {
     _outSink.add(_processString(data));
   }
 
+  @override
   void addError(error, [StackTrace stackTrace]) {
     _outSink.addError(error, stackTrace);
   }
 
+  @override
   void close() {
     _outSink.close();
   }
@@ -207,13 +216,14 @@ abstract class _StringEncoder extends StreamTransformerBase<String, List<int>>
 
 /// StringTransformer that UTF-8 encodes a stream of strings.
 class Utf8EncoderTransformer extends _StringEncoder {
+  @override
   List<int> _processString(String string) {
     var bytes = <int>[];
-    List<int> codepoints = utf16CodeUnitsToCodepoints(string.codeUnits);
-    int length = codepoints.length;
-    for (int i = 0; i < length; i++) {
+    var codepoints = utf16CodeUnitsToCodepoints(string.codeUnits);
+    var length = codepoints.length;
+    for (var i = 0; i < length; i++) {
       int additionalBytes;
-      int charCode = codepoints[i];
+      var charCode = codepoints[i];
       if (charCode <= 0x007F) {
         additionalBytes = 0;
         bytes.add(charCode);
@@ -230,7 +240,7 @@ class Utf8EncoderTransformer extends _StringEncoder {
         bytes.add(((charCode >> 18) & 0x07) | 0xF0);
         additionalBytes = 3;
       }
-      for (int i = additionalBytes; i > 0; i--) {
+      for (var i = additionalBytes; i > 0; i--) {
         // 10xxxxxx (xxxxxx is next 6 bits from the top).
         bytes.add(((charCode >> (6 * (i - 1))) & 0x3F) | 0x80);
       }

@@ -29,19 +29,21 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
 
   Iterator<int> get iterator => this;
 
+  @override
   int get current => _current;
 
+  @override
   bool moveNext() {
     _current = null;
     if (!utf16CodeUnitIterator.moveNext()) return false;
 
-    int value = utf16CodeUnitIterator.current;
+    var value = utf16CodeUnitIterator.current;
     if (value < 0) {
       if (replacementCodepoint != null) {
         _current = replacementCodepoint;
       } else {
         throw ArgumentError(
-            "Invalid UTF16 at ${utf16CodeUnitIterator.position}");
+            'Invalid UTF16 at ${utf16CodeUnitIterator.position}');
       }
     } else if (value < UNICODE_UTF16_RESERVED_LO ||
         (value > UNICODE_UTF16_RESERVED_HI && value <= UNICODE_PLANE_ONE_MAX)) {
@@ -50,7 +52,7 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
     } else if (value < UNICODE_UTF16_SURROGATE_UNIT_1_BASE &&
         utf16CodeUnitIterator.moveNext()) {
       // merge surrogate pair
-      int nextValue = utf16CodeUnitIterator.current;
+      var nextValue = utf16CodeUnitIterator.current;
       if (nextValue >= UNICODE_UTF16_SURROGATE_UNIT_1_BASE &&
           nextValue <= UNICODE_UTF16_RESERVED_HI) {
         value = (value - UNICODE_UTF16_SURROGATE_UNIT_0_BASE) << 10;
@@ -66,13 +68,13 @@ class Utf16CodeUnitDecoder implements Iterator<int> {
           _current = replacementCodepoint;
         } else {
           throw ArgumentError(
-              "Invalid UTF16 at ${utf16CodeUnitIterator.position}");
+              'Invalid UTF16 at ${utf16CodeUnitIterator.position}');
         }
       }
     } else if (replacementCodepoint != null) {
       _current = replacementCodepoint;
     } else {
-      throw ArgumentError("Invalid UTF16 at ${utf16CodeUnitIterator.position}");
+      throw ArgumentError('Invalid UTF16 at ${utf16CodeUnitIterator.position}');
     }
     return true;
   }

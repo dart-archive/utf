@@ -9,14 +9,14 @@ import 'package:utf/utf.dart';
 
 import 'expect.dart' as expect;
 
-const String testKoreanCharSubset = """
+const String testKoreanCharSubset = '''
 가각갂갃간갅갆갇갈갉갊갋갌갍갎갏감갑값갓갔강갖갗갘같갚갛
 개객갞갟갠갡갢갣갤갥갦갧갨갩갪갫갬갭갮갯갰갱갲갳갴갵갶갷
-갸갹갺갻갼갽갾갿걀걁걂걃걄걅걆걇걈걉걊걋걌걍걎걏걐걑걒걓""";
+갸갹갺갻갼갽갾갿걀걁걂걃걄걅걆걇걈걉걊걋걌걍걎걏걐걑걒걓''';
 
-const String testHanTwice = "二";
+const String testHanTwice = '二';
 
-const List<int> testKoreanCharSubsetUtf32beBom = <int>[
+const testKoreanCharSubsetUtf32beBom = <int>[
   0x00, 0x00, 0xfe, 0xff, 0x00, 0x00, 0xac, 0x00, // 8
   0x00, 0x00, 0xac, 0x01, 0x00, 0x00, 0xac, 0x02,
   0x00, 0x00, 0xac, 0x03, 0x00, 0x00, 0xac, 0x04,
@@ -63,7 +63,7 @@ const List<int> testKoreanCharSubsetUtf32beBom = <int>[
   0x00, 0x00, 0xac, 0x53
 ];
 
-const List<int> testKoreanCharSubsetUtf32le = <int>[
+const testKoreanCharSubsetUtf32le = <int>[
   0x00, 0xac, 0x00, 0x00, 0x01, 0xac, 0x00, 0x00, // 8
   0x02, 0xac, 0x00, 0x00, 0x03, 0xac, 0x00, 0x00,
   0x04, 0xac, 0x00, 0x00, 0x05, 0xac, 0x00, 0x00,
@@ -117,49 +117,48 @@ void main() {
 
 void testEncodeToUtf32() {
   expect.listEquals(
-      [], encodeUtf32le(""), "no input"); // TODO(dcarlson) skip bom on empty?
+      [], encodeUtf32le(''), 'no input'); // TODO(dcarlson) skip bom on empty?
   expect.listEquals(testKoreanCharSubsetUtf32beBom,
-      encodeUtf32(testKoreanCharSubset), "encode UTF-32(BE by default) Korean");
+      encodeUtf32(testKoreanCharSubset), 'encode UTF-32(BE by default) Korean');
   expect.listEquals(
       testKoreanCharSubsetUtf32le,
       encodeUtf32le(testKoreanCharSubset),
-      "encode UTF-32(LE by default) Korean");
+      'encode UTF-32(LE by default) Korean');
 }
 
 void testUtf32BytesToString() {
-  expect.stringEquals("", decodeUtf32([]), "no input");
-  expect.stringEquals("\ufffd", decodeUtf32([0]), "single byte");
-  expect.stringEquals("\ufffd", decodeUtf32([0, 0, 0x4e]), "short a byte");
+  expect.stringEquals('', decodeUtf32([]), 'no input');
+  expect.stringEquals('\ufffd', decodeUtf32([0]), 'single byte');
+  expect.stringEquals('\ufffd', decodeUtf32([0, 0, 0x4e]), 'short a byte');
   expect.stringEquals(
-      "\u4e8c\ufffd", decodeUtf32([0, 0, 0x4e, 0x8c, 0]), "extra byte");
+      '\u4e8c\ufffd', decodeUtf32([0, 0, 0x4e, 0x8c, 0]), 'extra byte');
 
   expect.stringEquals(
-      testHanTwice, decodeUtf32([0, 0, 0x4e, 0x8c]), "twice variation 1");
+      testHanTwice, decodeUtf32([0, 0, 0x4e, 0x8c]), 'twice variation 1');
   expect.stringEquals(testHanTwice,
-      decodeUtf32([0, 0, 0xfe, 0xff, 0, 0, 0x4e, 0x8c]), "twice variation 2");
+      decodeUtf32([0, 0, 0xfe, 0xff, 0, 0, 0x4e, 0x8c]), 'twice variation 2');
   expect.stringEquals(testHanTwice,
-      decodeUtf32([0xff, 0xfe, 0, 0, 0x8c, 0x4e, 0, 0]), "twice variation 3");
+      decodeUtf32([0xff, 0xfe, 0, 0, 0x8c, 0x4e, 0, 0]), 'twice variation 3');
 
   expect.stringEquals(
-      testHanTwice, decodeUtf32be([0, 0, 0x4e, 0x8c]), "twice variation 4");
+      testHanTwice, decodeUtf32be([0, 0, 0x4e, 0x8c]), 'twice variation 4');
   expect.stringEquals(testHanTwice,
-      decodeUtf32be([0, 0, 0xfe, 0xff, 0, 0, 0x4e, 0x8c]), "twice variation 5");
+      decodeUtf32be([0, 0, 0xfe, 0xff, 0, 0, 0x4e, 0x8c]), 'twice variation 5');
 
   expect.stringEquals(
-      testHanTwice, decodeUtf32le([0x8c, 0x4e, 0, 0]), "twice variation 6");
+      testHanTwice, decodeUtf32le([0x8c, 0x4e, 0, 0]), 'twice variation 6');
   expect.stringEquals(testHanTwice,
-      decodeUtf32le([0xff, 0xfe, 0, 0, 0x8c, 0x4e, 0, 0]), "twice variation 7");
+      decodeUtf32le([0xff, 0xfe, 0, 0, 0x8c, 0x4e, 0, 0]), 'twice variation 7');
 
   expect.stringEquals(testKoreanCharSubset,
-      decodeUtf32(testKoreanCharSubsetUtf32beBom), "UTF-32BE Korean");
+      decodeUtf32(testKoreanCharSubsetUtf32beBom), 'UTF-32BE Korean');
 }
 
 void testIterableMethods() {
   // empty input
   expect.isFalse(decodeUtf32AsIterable([]).iterator.moveNext());
 
-  IterableUtf32Decoder koreanDecoder =
-      decodeUtf32AsIterable(testKoreanCharSubsetUtf32beBom);
+  var koreanDecoder = decodeUtf32AsIterable(testKoreanCharSubsetUtf32beBom);
   // get the first character
   expect.equals(testKoreanCharSubset.codeUnits[0], koreanDecoder.first);
   // get the whole translation using the Iterable interface
@@ -175,7 +174,7 @@ void testIterableMethods() {
       44032,
       (List<int>.from(
           decodeUtf32leAsIterable(testKoreanCharSubsetUtf32le)))[0]);
-  bool stripBom = false;
+  var stripBom = false;
   expect.equals(
       UNICODE_BOM,
       (List<int>.from(decodeUtf32beAsIterable(

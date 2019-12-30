@@ -4,7 +4,7 @@
 
 library utf.utf8;
 
-import "dart:collection";
+import 'dart:collection';
 
 import 'constants.dart';
 import 'list_range.dart';
@@ -67,10 +67,10 @@ int _addToEncoding(int offset, int bytes, int value, List<int> buffer) {
 
 /// Encode code points as UTF-8 code units.
 List<int> codepointsToUtf8(List<int> codepoints, [int offset = 0, int length]) {
-  ListRange source = ListRange(codepoints, offset, length);
+  var source = ListRange(codepoints, offset, length);
 
-  int encodedLength = 0;
-  for (int value in source) {
+  var encodedLength = 0;
+  for (var value in source) {
     if (value < 0 || value > UNICODE_VALID_RANGE_MAX) {
       encodedLength += 3;
     } else if (value <= _UTF8_ONE_BYTE_MAX) {
@@ -84,9 +84,9 @@ List<int> codepointsToUtf8(List<int> codepoints, [int offset = 0, int length]) {
     }
   }
 
-  List<int> encoded = List<int>(encodedLength);
-  int insertAt = 0;
-  for (int value in source) {
+  var encoded = List<int>(encodedLength);
+  var insertAt = 0;
+  for (var value in source) {
     if (value < 0 || value > UNICODE_VALID_RANGE_MAX) {
       encoded.setRange(insertAt, insertAt + 3, [0xef, 0xbf, 0xbd]);
       insertAt += 3;
@@ -131,6 +131,7 @@ List<int> utf8ToCodepoints(List<int> utf8EncodedBytes,
 class IterableUtf8Decoder extends IterableBase<int> {
   final List<int> bytes;
   final int offset;
+  @override
   final int length;
   final int replacementCodepoint;
 
@@ -139,6 +140,7 @@ class IterableUtf8Decoder extends IterableBase<int> {
       this.length,
       this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]);
 
+  @override
   Utf8Decoder get iterator =>
       Utf8Decoder(bytes, offset, length, replacementCodepoint);
 }
@@ -169,29 +171,31 @@ class Utf8Decoder implements Iterator<int> {
   // Decode the remaininder of the characters in this decoder
   //into a [List<int>].
   List<int> decodeRest() {
-    List<int> codepoints = List<int>(utf8EncodedBytesIterator.remaining);
-    int i = 0;
+    var codepoints = List<int>(utf8EncodedBytesIterator.remaining);
+    var i = 0;
     while (moveNext()) {
       codepoints[i++] = current;
     }
     if (i == codepoints.length) {
       return codepoints;
     } else {
-      List<int> truncCodepoints = List<int>(i);
+      var truncCodepoints = List<int>(i);
       truncCodepoints.setRange(0, i, codepoints);
       return truncCodepoints;
     }
   }
 
+  @override
   int get current => _current;
 
+  @override
   bool moveNext() {
     _current = null;
 
     if (!utf8EncodedBytesIterator.moveNext()) return false;
 
-    int value = utf8EncodedBytesIterator.current;
-    int additionalBytes = 0;
+    var value = utf8EncodedBytesIterator.current;
+    var additionalBytes = 0;
 
     if (value < 0) {
       if (replacementCodepoint != null) {
@@ -199,7 +203,7 @@ class Utf8Decoder implements Iterator<int> {
         return true;
       } else {
         throw ArgumentError(
-            "Invalid UTF8 at ${utf8EncodedBytesIterator.position}");
+            'Invalid UTF8 at ${utf8EncodedBytesIterator.position}');
       }
     } else if (value <= _UTF8_ONE_BYTE_MAX) {
       _current = value;
@@ -210,7 +214,7 @@ class Utf8Decoder implements Iterator<int> {
         return true;
       } else {
         throw ArgumentError(
-            "Invalid UTF8 at ${utf8EncodedBytesIterator.position}");
+            'Invalid UTF8 at ${utf8EncodedBytesIterator.position}');
       }
     } else if (value < _UTF8_FIRST_BYTE_OF_THREE_BASE) {
       value -= _UTF8_FIRST_BYTE_OF_TWO_BASE;
@@ -232,11 +236,11 @@ class Utf8Decoder implements Iterator<int> {
       return true;
     } else {
       throw ArgumentError(
-          "Invalid UTF8 at ${utf8EncodedBytesIterator.position}");
+          'Invalid UTF8 at ${utf8EncodedBytesIterator.position}');
     }
-    int j = 0;
+    var j = 0;
     while (j < additionalBytes && utf8EncodedBytesIterator.moveNext()) {
-      int nextValue = utf8EncodedBytesIterator.current;
+      var nextValue = utf8EncodedBytesIterator.current;
       if (nextValue > _UTF8_ONE_BYTE_MAX &&
           nextValue < _UTF8_FIRST_BYTE_OF_TWO_BASE) {
         value = ((value << 6) | (nextValue & _UTF8_LO_SIX_BIT_MASK));
@@ -249,13 +253,13 @@ class Utf8Decoder implements Iterator<int> {
       }
       j++;
     }
-    bool validSequence = (j == additionalBytes &&
+    var validSequence = (j == additionalBytes &&
         (value < UNICODE_UTF16_RESERVED_LO ||
             value > UNICODE_UTF16_RESERVED_HI));
-    bool nonOverlong = (additionalBytes == 1 && value > _UTF8_ONE_BYTE_MAX) ||
+    var nonOverlong = (additionalBytes == 1 && value > _UTF8_ONE_BYTE_MAX) ||
         (additionalBytes == 2 && value > _UTF8_TWO_BYTE_MAX) ||
         (additionalBytes == 3 && value > _UTF8_THREE_BYTE_MAX);
-    bool inRange = value <= UNICODE_VALID_RANGE_MAX;
+    var inRange = value <= UNICODE_VALID_RANGE_MAX;
     if (validSequence && nonOverlong && inRange) {
       _current = value;
       return true;
@@ -264,7 +268,7 @@ class Utf8Decoder implements Iterator<int> {
       return true;
     } else {
       throw ArgumentError(
-          "Invalid UTF8 at ${utf8EncodedBytesIterator.position - j}");
+          'Invalid UTF8 at ${utf8EncodedBytesIterator.position - j}');
     }
   }
 }

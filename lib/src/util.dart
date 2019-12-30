@@ -13,19 +13,18 @@ List<int> utf16CodeUnitsToCodepoints(List<int> utf16CodeUnits,
     [int offset = 0,
     int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  ListRangeIterator source =
-      (ListRange(utf16CodeUnits, offset, length)).iterator;
-  Utf16CodeUnitDecoder decoder =
+  var source = (ListRange(utf16CodeUnits, offset, length)).iterator;
+  var decoder =
       Utf16CodeUnitDecoder.fromListRangeIterator(source, replacementCodepoint);
-  List<int> codepoints = List<int>(source.remaining);
-  int i = 0;
+  var codepoints = List<int>(source.remaining);
+  var i = 0;
   while (decoder.moveNext()) {
     codepoints[i++] = decoder.current;
   }
   if (i == codepoints.length) {
     return codepoints;
   } else {
-    List<int> codepointTrunc = List<int>(i);
+    var codepointTrunc = List<int>(i);
     codepointTrunc.setRange(0, i, codepoints);
     return codepointTrunc;
   }
@@ -36,9 +35,9 @@ List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     [int offset = 0,
     int length,
     int replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT]) {
-  ListRange listRange = ListRange(codepoints, offset, length);
-  int encodedLength = 0;
-  for (int value in listRange) {
+  var listRange = ListRange(codepoints, offset, length);
+  var encodedLength = 0;
+  for (var value in listRange) {
     if ((value >= 0 && value < UNICODE_UTF16_RESERVED_LO) ||
         (value > UNICODE_UTF16_RESERVED_HI && value <= UNICODE_PLANE_ONE_MAX)) {
       encodedLength++;
@@ -50,15 +49,15 @@ List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     }
   }
 
-  List<int> codeUnitsBuffer = List<int>(encodedLength);
-  int j = 0;
-  for (int value in listRange) {
+  var codeUnitsBuffer = List<int>(encodedLength);
+  var j = 0;
+  for (var value in listRange) {
     if ((value >= 0 && value < UNICODE_UTF16_RESERVED_LO) ||
         (value > UNICODE_UTF16_RESERVED_HI && value <= UNICODE_PLANE_ONE_MAX)) {
       codeUnitsBuffer[j++] = value;
     } else if (value > UNICODE_PLANE_ONE_MAX &&
         value <= UNICODE_VALID_RANGE_MAX) {
-      int base = value - UNICODE_UTF16_OFFSET;
+      var base = value - UNICODE_UTF16_OFFSET;
       codeUnitsBuffer[j++] = UNICODE_UTF16_SURROGATE_UNIT_0_BASE +
           ((base & UNICODE_UTF16_HI_MASK) >> 10);
       codeUnitsBuffer[j++] =
@@ -66,7 +65,7 @@ List<int> codepointsToUtf16CodeUnits(List<int> codepoints,
     } else if (replacementCodepoint != null) {
       codeUnitsBuffer[j++] = replacementCodepoint;
     } else {
-      throw ArgumentError("Invalid encoding");
+      throw ArgumentError('Invalid encoding');
     }
   }
   return codeUnitsBuffer;

@@ -5,7 +5,7 @@
 library utf.utf8_test;
 
 import 'package:test/test.dart';
-import "package:utf/utf.dart";
+import 'package:utf/utf.dart';
 
 import 'expect.dart' as expect;
 
@@ -13,14 +13,14 @@ String decode(List<int> bytes) => decodeUtf8(bytes);
 
 void main() {
   test('Google favorite: "Îñţérñåţîöñåļîžåţîờñ"', () {
-    String string = decode([
+    var string = decode([
       0xc3, 0x8e, 0xc3, 0xb1, 0xc5, 0xa3, 0xc3, 0xa9, 0x72, // 8
       0xc3, 0xb1, 0xc3, 0xa5, 0xc5, 0xa3, 0xc3, 0xae, 0xc3,
       0xb6, 0xc3, 0xb1, 0xc3, 0xa5, 0xc4, 0xbc, 0xc3, 0xae,
       0xc5, 0xbe, 0xc3, 0xa5, 0xc5, 0xa3, 0xc3, 0xae, 0xe1,
       0xbb, 0x9d, 0xc3, 0xb1
     ]);
-    expect.stringEquals("Îñţérñåţîöñåļîžåţîờñ", string);
+    expect.stringEquals('Îñţérñåţîöñåļîžåţîờñ', string);
   });
 
   test('Blueberry porridge in Danish: "blåbærgrød"', () {
@@ -28,7 +28,7 @@ void main() {
       0x62, 0x6c, 0xc3, 0xa5, 0x62, 0xc3, 0xa6, 0x72, 0x67, 0x72, // 8
       0xc3, 0xb8, 0x64
     ]);
-    expect.stringEquals("blåbærgrød", string);
+    expect.stringEquals('blåbærgrød', string);
   });
 
   test('"சிவா அணாமாைல", that is "Siva Annamalai" in Tamil.', () {
@@ -38,7 +38,7 @@ void main() {
       0xae, 0xbe, 0xe0, 0xae, 0xae, 0xe0, 0xae, 0xbe, 0xe0, 0xaf,
       0x88, 0xe0, 0xae, 0xb2
     ]);
-    expect.stringEquals("சிவா அணாமாைல", string);
+    expect.stringEquals('சிவா அணாமாைல', string);
   });
 
   test('"िसवा अणामालै", that is "Siva Annamalai" in Devanagari', () {
@@ -48,15 +48,15 @@ void main() {
       0xa4, 0xbe, 0xe0, 0xa4, 0xae, 0xe0, 0xa4, 0xbe, 0xe0, 0xa4,
       0xb2, 0xe0, 0xa5, 0x88
     ]);
-    expect.stringEquals("िसवा अणामालै", string);
+    expect.stringEquals('िसवा अणामालै', string);
   });
 
   test('DESERET CAPITAL LETTER BEE, unicode 0x10412(0xD801+0xDC12', () {
     // UTF-8: F0 90 90 92
     var string = decode([0xf0, 0x90, 0x90, 0x92]);
     expect.equals(string.length, 2);
-    expect.equals("𐐒".length, 2);
-    expect.stringEquals("𐐒", string);
+    expect.equals('𐐒'.length, 2);
+    expect.stringEquals('𐐒', string);
   });
   // TODO(ahe): Add tests of bad input.
 }

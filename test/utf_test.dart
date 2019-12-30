@@ -5,13 +5,13 @@
 library utf.utf_test;
 
 import 'package:test/test.dart';
-import "package:utf/utf.dart";
+import 'package:utf/utf.dart';
 
-import "expect.dart" as expect;
+import 'expect.dart' as expect;
 
-main() {
+void main() {
   test('utf', () {
-    String str = String.fromCharCodes([0x1d537]);
+    var str = String.fromCharCodes([0x1d537]);
     // String.codeUnits gives 16-bit code units, but stringToCodepoints gives
     // back the original code points.
     expect.listEquals([0xd835, 0xdd37], str.codeUnits);

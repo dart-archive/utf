@@ -17,9 +17,9 @@ class ListRange extends IterableBase<int> {
   final int _length;
 
   ListRange(List<int> source, [int offset = 0, int length])
-      : this._source = source,
-        this._offset = offset,
-        this._length = (length == null ? source.length - offset : length) {
+      : _source = source,
+        _offset = offset,
+        _length = (length ?? source.length - offset) {
     if (_offset < 0 || _offset > _source.length) {
       throw RangeError.value(_offset);
     }
@@ -31,9 +31,11 @@ class ListRange extends IterableBase<int> {
     }
   }
 
+  @override
   ListRangeIterator get iterator =>
       _ListRangeIteratorImpl(_source, _offset, _offset + _length);
 
+  @override
   int get length => _length;
 }
 
@@ -41,7 +43,9 @@ class ListRange extends IterableBase<int> {
 /// including the ability to get the current position, count remaining items,
 /// and move forward/backward within the iterator.
 abstract class ListRangeIterator implements Iterator<int> {
+  @override
   bool moveNext();
+  @override
   int get current;
   int get position;
   void backup([int by]);
@@ -57,18 +61,24 @@ class _ListRangeIteratorImpl implements ListRangeIterator {
   _ListRangeIteratorImpl(this._source, int offset, this._end)
       : _offset = offset - 1;
 
+  @override
   int get current => _source[_offset];
 
+  @override
   bool moveNext() => ++_offset < _end;
 
+  @override
   int get position => _offset;
 
+  @override
   void backup([int by = 1]) {
     _offset -= by;
   }
 
+  @override
   int get remaining => _end - _offset - 1;
 
+  @override
   void skip([int count = 1]) {
     _offset += count;
   }
