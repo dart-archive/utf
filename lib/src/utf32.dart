@@ -184,7 +184,7 @@ class IterableUtf32Decoder extends IterableBase<int> {
   Utf32BytesDecoder get iterator => codeunitsProvider();
 }
 
-/// Abstrace parent class converts encoded bytes to codepoints.
+/// Abstract parent class converts encoded bytes to codepoints.
 abstract class Utf32BytesDecoder implements ListRangeIterator {
   // TODO(kevmoo): should this field be private?
   final ListRangeIterator utf32EncodedBytesIterator;

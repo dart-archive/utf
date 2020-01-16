@@ -164,11 +164,7 @@ class Utf8Decoder implements Iterator<int> {
       : utf8EncodedBytesIterator =
             (ListRange(utf8EncodedBytes, offset, length)).iterator;
 
-  Utf8Decoder._fromListRangeIterator(ListRange source,
-      [this.replacementCodepoint = UNICODE_REPLACEMENT_CHARACTER_CODEPOINT])
-      : utf8EncodedBytesIterator = source.iterator;
-
-  // Decode the remaininder of the characters in this decoder
+  // Decode the remainder of the characters in this decoder
   //into a [List<int>].
   List<int> decodeRest() {
     var codepoints = List<int>(utf8EncodedBytesIterator.remaining);
